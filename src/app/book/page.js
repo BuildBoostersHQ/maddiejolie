@@ -1,3 +1,4 @@
+import Script from 'next/script'
 import { BRAND_LINKS } from '@/lib/constants'
 
 export const metadata = {
@@ -36,12 +37,12 @@ export default function BookPage() {
         </div>
 
         <div className="bp-cal-wrap">
-          <div className="bp-cal">
-            <iframe
-              src={embedUrl}
-              allow="payment"
-            />
-          </div>
+          <iframe
+            src={embedUrl}
+            className="bp-cal-iframe"
+            scrolling="no"
+            allow="payment"
+          />
         </div>
 
         <div className="bp-foot">
@@ -49,6 +50,11 @@ export default function BookPage() {
         </div>
 
       </div>
+
+      <Script
+        src="https://api.buildboosters.com/js/form_embed.js"
+        strategy="afterInteractive"
+      />
     </div>
   )
 }

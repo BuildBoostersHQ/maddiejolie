@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'You're booked! | maddiejolie',
+  title: "You're booked! | maddiejolie",
   description: 'Thanks for booking a call with Maddie.',
 }
 

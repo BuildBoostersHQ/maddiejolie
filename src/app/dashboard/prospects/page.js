@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { MOCK_PROSPECTS, STAGES, TRADES } from '@/lib/constants'
+import { STAGES, TRADES } from '@/lib/constants'
+import { useProspects } from '@/lib/useProspects'
 
 function ProspectRow({ prospect, onSelect, isSelected }) {
   const stage = STAGES.find(s => s.id === prospect.stage)
@@ -164,13 +165,20 @@ function ProspectDetail({ prospect, onClose }) {
 }
 
 export default function ProspectsPage() {
+  const { prospects, loading } = useProspects()
   const [selected, setSelected] = useState(null)
   const [stageFilter, setStageFilter] = useState('all')
   const [tradeFilter, setTradeFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('score')
 
-  let filtered = [...MOCK_PROSPECTS]
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <p className="text-sm text-dash-dim">Loading...</p>
+    </div>
+  )
+
+  let filtered = [...prospects]
 
   if (stageFilter !== 'all') filtered = filtered.filter(p => p.stage === stageFilter)
   if (tradeFilter !== 'all') filtered = filtered.filter(p => p.trade === tradeFilter)

@@ -1,5 +1,6 @@
 'use client'
-import { MOCK_PROSPECTS, STAGES } from '@/lib/constants'
+import { STAGES } from '@/lib/constants'
+import { useProspects } from '@/lib/useProspects'
 
 function PipelineCard({ prospect }) {
   const hasVisited = prospect.pageViews > 0
@@ -38,7 +39,14 @@ function PipelineCard({ prospect }) {
 }
 
 export default function PipelinePage() {
-  // Show relevant pipeline stages only
+  const { prospects: allProspects, loading } = useProspects()
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <p className="text-sm text-dash-dim">Loading...</p>
+    </div>
+  )
+
   const pipelineStages = STAGES.filter(s =>
     ['new', 'sms1', 'sms2', 'vm', 'sms3', 'clicked', 'responded', 'called', 'closed', 'lost'].includes(s.id)
   )
@@ -53,7 +61,7 @@ export default function PipelinePage() {
       <div className="overflow-x-auto -mx-4 px-4 lg:mx-0 lg:px-0">
         <div className="flex gap-3 min-w-max lg:min-w-0 lg:grid lg:grid-cols-5 xl:grid-cols-5">
           {pipelineStages.map(stage => {
-            const prospects = MOCK_PROSPECTS.filter(p => p.stage === stage.id)
+            const prospects = allProspects.filter(p => p.stage === stage.id)
             return (
               <div key={stage.id} className="w-56 lg:w-auto flex-shrink-0">
                 <div className="flex items-center gap-2 mb-3">

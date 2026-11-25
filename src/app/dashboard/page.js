@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { MOCK_PROSPECTS, STAGES } from '@/lib/constants'
+import { STAGES } from '@/lib/constants'
+import { useProspects } from '@/lib/useProspects'
 
 function StatCard({ label, value, sub, gradient }) {
   return (
@@ -47,18 +48,26 @@ function HotLeadRow({ prospect }) {
 }
 
 export default function DashboardOverview() {
-  const total = MOCK_PROSPECTS.length
-  const clicked = MOCK_PROSPECTS.filter(p => p.pageViews > 0).length
-  const responded = MOCK_PROSPECTS.filter(p => ['responded', 'called', 'closed'].includes(p.stage)).length
-  const closed = MOCK_PROSPECTS.filter(p => p.stage === 'closed').length
+  const { prospects, loading, isLive } = useProspects()
 
-  const hotLeads = [...MOCK_PROSPECTS]
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <p className="text-sm text-dash-dim">Loading...</p>
+    </div>
+  )
+
+  const total = prospects.length
+  const clicked = prospects.filter(p => p.pageViews > 0).length
+  const responded = prospects.filter(p => ['responded', 'called', 'closed'].includes(p.stage)).length
+  const closed = prospects.filter(p => p.stage === 'closed').length
+
+  const hotLeads = [...prospects]
     .filter(p => p.pageViews > 0 && !['closed', 'lost'].includes(p.stage))
     .sort((a, b) => b.timeOnPage - a.timeOnPage)
 
   const stageCounts = STAGES.map(s => ({
     ...s,
-    count: MOCK_PROSPECTS.filter(p => p.stage === s.id).length,
+    count: prospects.filter(p => p.stage === s.id).length,
   })).filter(s => s.count > 0)
 
   return (
@@ -66,7 +75,11 @@ export default function DashboardOverview() {
       {/* Header */}
       <div>
         <h1 className="text-xl lg:text-2xl font-bold">Dashboard</h1>
-        <p className="text-sm text-dash-muted mt-1">Your prospecting pipeline at a glance</p>
+        <p className="text-sm text-dash-muted mt-1">
+          Your prospecting pipeline at a glance
+          {isLive && <span className="ml-2 text-xs text-green-400/70">· live data</span>}
+          {!isLive && <span className="ml-2 text-xs text-dash-dim">· demo data</span>}
+        </p>
       </div>
 
       {/* Stats row */}
@@ -152,7 +165,7 @@ export default function DashboardOverview() {
           </Link>
         </div>
         <div className="divide-y divide-dash-border/50">
-          {MOCK_PROSPECTS.filter(p => p.messages.some(m => m.type === 'in')).map(p => {
+          {prospects.filter(p => p.messages.some(m => m.type === 'in')).map(p => {
             const lastIn = [...p.messages].reverse().find(m => m.type === 'in')
             return (
               <Link key={p.id} href="/dashboard/messages" className="flex items-center gap-3 px-4 lg:px-5 py-3 hover:bg-white/[0.02] transition-smooth">

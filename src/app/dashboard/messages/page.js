@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { MOCK_PROSPECTS, STAGES } from '@/lib/constants'
+import { STAGES } from '@/lib/constants'
+import { useProspects } from '@/lib/useProspects'
 
 function ConversationItem({ prospect, isSelected, onClick }) {
   const lastMessage = prospect.messages[prospect.messages.length - 1]
@@ -131,9 +132,16 @@ function MessageThread({ prospect }) {
 }
 
 export default function MessagesPage() {
+  const { prospects, loading } = useProspects()
   const [selected, setSelected] = useState(null)
 
-  const withMessages = MOCK_PROSPECTS
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <p className="text-sm text-dash-dim">Loading...</p>
+    </div>
+  )
+
+  const withMessages = prospects
     .filter(p => p.messages.length > 0)
     .sort((a, b) => {
       const aHasIn = a.messages.some(m => m.type === 'in') ? 1 : 0

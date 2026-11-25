@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { TRADES } from '@/lib/constants'
+import { TRADES, BRANDS } from '@/lib/constants'
 
 const AREAS = [
   'Miami, FL',
@@ -36,6 +36,46 @@ export default function RunPipelinePage() {
   const [log, setLog] = useState([])
   const [results, setResults] = useState(null)
   const [verifyProgress, setVerifyProgress] = useState(null)
+  const [exp, setExp] = useState({ brand: 'all', trade: '', city: '' })
+  const [preview, setPreview] = useState(null)
+  const [previewing, setPreviewing] = useState(false)
+  const [exportError, setExportError] = useState('')
+
+  function exportParams() {
+    const params = new URLSearchParams()
+    if (exp.brand !== 'all') params.set('brand', exp.brand)
+    if (exp.trade.trim()) params.set('trade', exp.trade.trim())
+    if (exp.city.trim()) params.set('city', exp.city.trim())
+    return params
+  }
+
+  async function runPreview() {
+    setPreviewing(true)
+    setExportError('')
+    setPreview(null)
+    try {
+      const body = { brand: exp.brand, trade: exp.trade.trim(), city: exp.city.trim() }
+      if (exp.brand === 'all') delete body.brand
+      if (!body.trade) delete body.trade
+      if (!body.city) delete body.city
+      const res = await fetch('/api/pipeline/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || `Preview failed (${res.status})`)
+      setPreview(data)
+    } catch (err) {
+      setExportError(err.message)
+    } finally {
+      setPreviewing(false)
+    }
+  }
+
+  function downloadCsv() {
+    window.open(`/api/pipeline/export?${exportParams().toString()}`, '_blank')
+  }
 
   function addLog(msg) {
     setLog(prev => [...prev, { time: new Date().toLocaleTimeString(), msg }])
@@ -193,9 +233,9 @@ export default function RunPipelinePage() {
               onChange={(e) => setBrand(e.target.value)}
               className="w-full bg-dash-bg border border-dash-border rounded-lg px-3 py-2.5 text-sm text-dash-text focus:outline-none focus:border-violet-500/30 transition-all appearance-none"
             >
-              <option value="split">50/50 Split (A/B Test)</option>
-              <option value="mj">Maddie Jolie only</option>
-              <option value="bb">Build Boosters only</option>
+              <option value="mj">Maddie Jolie</option>
+              <option value="bb">Build Boosters</option>
+              <option value="split">50/50 Split</option>
             </select>
           </div>
 
@@ -288,6 +328,86 @@ export default function RunPipelinePage() {
               <p className="text-[10px] text-dash-dim">Saved</p>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Export to Kixie */}
+      {(step === 'ready_verify' || step === 'done') && (
+        <div className="bg-dash-surface border border-dash-border rounded-xl p-5 mb-4">
+          <p className="text-xs text-dash-dim uppercase tracking-wider mb-3">Export to Kixie</p>
+          <div className="grid grid-cols-3 gap-2 mb-3">
+            <select
+              value={exp.brand}
+              onChange={(e) => setExp({ ...exp, brand: e.target.value })}
+              className="bg-dash-bg border border-dash-border rounded-lg px-3 py-2 text-sm text-dash-text focus:outline-none focus:border-violet-500/30 appearance-none"
+            >
+              <option value="all">All brands</option>
+              {BRANDS.map(b => <option key={b.id} value={b.id}>{b.label}</option>)}
+            </select>
+            <input
+              type="text"
+              value={exp.trade}
+              onChange={(e) => setExp({ ...exp, trade: e.target.value })}
+              placeholder="Trade (any)"
+              className="bg-dash-bg border border-dash-border rounded-lg px-3 py-2 text-sm text-dash-text placeholder-dash-dim focus:outline-none focus:border-violet-500/30"
+            />
+            <input
+              type="text"
+              value={exp.city}
+              onChange={(e) => setExp({ ...exp, city: e.target.value })}
+              placeholder="City (any)"
+              className="bg-dash-bg border border-dash-border rounded-lg px-3 py-2 text-sm text-dash-text placeholder-dash-dim focus:outline-none focus:border-violet-500/30"
+            />
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={runPreview}
+              disabled={previewing}
+              className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-40"
+              style={{ background: 'linear-gradient(135deg, rgba(124,131,184,0.8), rgba(142,143,200,0.8))' }}
+            >
+              {previewing ? 'Loading...' : 'Preview'}
+            </button>
+            <button
+              onClick={downloadCsv}
+              className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white transition-all"
+              style={{ background: 'linear-gradient(135deg, rgba(106,171,122,0.8), rgba(91,158,128,0.8))' }}
+            >
+              Download CSV
+            </button>
+          </div>
+          {exportError && <p className="text-xs mt-3" style={{ color: 'rgba(248,113,113,0.85)' }}>{exportError}</p>}
+          {preview && (
+            <div className="mt-4">
+              <div className="grid grid-cols-4 gap-3 text-center">
+                <div>
+                  <p className="text-lg font-bold font-heading" style={{ color: '#7c83b8' }}>{preview.count ?? 0}</p>
+                  <p className="text-[10px] text-dash-dim">Prospects</p>
+                </div>
+                <div>
+                  <p className="text-lg font-bold font-heading" style={{ color: '#b896c7' }}>{preview.mjCount ?? preview.brands?.mj ?? 0}</p>
+                  <p className="text-[10px] text-dash-dim">MJ</p>
+                </div>
+                <div>
+                  <p className="text-lg font-bold font-heading" style={{ color: '#c89f80' }}>{preview.bbCount ?? preview.brands?.bb ?? 0}</p>
+                  <p className="text-[10px] text-dash-dim">BB</p>
+                </div>
+                <div>
+                  <p className="text-lg font-bold font-heading" style={{ color: (preview.needsFromNumber ?? preview.missingFromNumber ?? 0) > 0 ? '#f87171' : '#6aab7a' }}>
+                    {preview.needsFromNumber ?? preview.missingFromNumber ?? 0}
+                  </p>
+                  <p className="text-[10px] text-dash-dim">Need from #</p>
+                </div>
+              </div>
+              {preview.byTrade && Object.keys(preview.byTrade).length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {Object.entries(preview.byTrade).map(([t, n]) => (
+                    <span key={t} className="text-[10px] text-dash-muted bg-white/[0.04] px-2 py-0.5 rounded-full">{t}: {n}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

@@ -1,7 +1,8 @@
 'use client'
 import { useState } from 'react'
-import { STAGES, TRADES, BRAND_LINKS, getStage } from '@/lib/constants'
+import { STAGES, TRADES, BRANDS, BRAND_LINKS, getStage } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
+import BrandPill from '@/components/BrandPill'
 
 function ProspectRow({ prospect, onSelect, isSelected }) {
   const stage = getStage(prospect.stage)
@@ -28,6 +29,7 @@ function ProspectRow({ prospect, onSelect, isSelected }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <p className="text-sm font-medium truncate">{prospect.name}</p>
+          <BrandPill brand={prospect.brand} />
           {hasVisited && (
             <span className="text-[10px] text-pink-400 bg-pink-400/10 px-1.5 py-0.5 rounded-full">
               {prospect.pageViews}× viewed
@@ -35,7 +37,7 @@ function ProspectRow({ prospect, onSelect, isSelected }) {
           )}
         </div>
         <p className="text-xs text-dash-dim truncate">
-          {prospect.owner} · {prospect.trade} · {prospect.city}, {prospect.state}
+          {prospect.owner} · {prospect.trade} · {prospect.city}, {prospect.state}{prospect.fromNumber ? ` · from ${prospect.fromNumber}` : ''}
         </p>
       </div>
 
@@ -110,10 +112,10 @@ function ProspectDetail({ prospect, onClose }) {
             }
           </p>
         </div>
-        {prospect.from_number && (
+        {prospect.fromNumber && (
           <div>
             <p className="text-[10px] text-dash-dim uppercase tracking-wider">From #</p>
-            <p className="text-sm text-dash-muted">{prospect.from_number}</p>
+            <p className="text-sm text-dash-muted">{prospect.fromNumber}</p>
           </div>
         )}
       </div>
@@ -206,6 +208,7 @@ export default function ProspectsPage() {
   const [selected, setSelected] = useState(null)
   const [stageFilter, setStageFilter] = useState('all')
   const [tradeFilter, setTradeFilter] = useState('all')
+  const [brandFilter, setBrandFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('score')
 
@@ -219,6 +222,7 @@ export default function ProspectsPage() {
 
   if (stageFilter !== 'all') filtered = filtered.filter(p => p.stage === stageFilter)
   if (tradeFilter !== 'all') filtered = filtered.filter(p => p.trade === tradeFilter)
+  if (brandFilter !== 'all') filtered = filtered.filter(p => p.brand === brandFilter)
   if (search) {
     const q = search.toLowerCase()
     filtered = filtered.filter(p =>
@@ -268,6 +272,14 @@ export default function ProspectsPage() {
         >
           <option value="all">All trades</option>
           {TRADES.map(t => <option key={t} value={t}>{t}</option>)}
+        </select>
+        <select
+          value={brandFilter}
+          onChange={(e) => setBrandFilter(e.target.value)}
+          className="bg-dash-surface border border-dash-border rounded-lg px-3 py-2 text-sm text-dash-text focus:outline-none focus:border-violet-500/50 transition-smooth appearance-none"
+        >
+          <option value="all">All brands</option>
+          {BRANDS.map(b => <option key={b.id} value={b.id}>{b.label}</option>)}
         </select>
         <select
           value={sortBy}

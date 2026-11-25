@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { STAGES, getStage } from '@/lib/constants'
+import { STAGES, getStage, SEQUENCE_STEPS, getSequenceStep, BRANDS } from '@/lib/constants'
+import BrandPill from '@/components/BrandPill'
 import { useProspects } from '@/lib/useProspects'
 
 // 60+ seconds on page = "engaged" / looked for a while
@@ -100,8 +101,10 @@ function ConversationItem({ prospect, isSelected, onClick }) {
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <p className="truncate" style={{ fontSize: '13px', fontWeight: 500, color: hasInbound ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.3)', margin: 0 }}>
-              {prospect.owner}
+            <p className="truncate" style={{ fontSize: '13px', fontWeight: 500, color: hasInbound ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.3)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span className="truncate">{prospect.owner}</span>
+              <BrandPill brand={prospect.brand} />
+              {prospect.fromNumber && <span style={{ fontSize: '9px', fontWeight: 400, color: 'rgba(255,255,255,0.2)' }}>{prospect.fromNumber}</span>}
             </p>
             <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.15)', flexShrink: 0, marginLeft: '8px' }}>
               {lastMessage && new Date(lastMessage.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
@@ -174,8 +177,39 @@ function ProspectInfoPanel({ prospect }) {
 
 function MessageThread({ prospect }) {
   const [newMessage, setNewMessage] = useState('')
+  const [localMessages, setLocalMessages] = useState([])
+  const [sending, setSending] = useState(false)
+  const [sendError, setSendError] = useState('')
   const stage = getStage(prospect.stage)
   const avatarStyle = getAvatarStyle(prospect)
+  const allMessages = [...prospect.messages, ...localMessages]
+
+  async function handleSend() {
+    const body = newMessage.trim()
+    if (!body || sending) return
+    setSending(true)
+    setSendError('')
+    const optimistic = { type: 'out', text: body, time: new Date().toISOString(), step: 'reply', brand: prospect.brand, fromNumber: prospect.fromNumber }
+    setLocalMessages(prev => [...prev, optimistic])
+    setNewMessage('')
+    try {
+      const res = await fetch('/api/kixie/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prospect_id: prospect.id, body, sequence_step: 'reply' }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || `Send failed (${res.status})`)
+      }
+    } catch (err) {
+      setLocalMessages(prev => prev.filter(m => m !== optimistic))
+      setNewMessage(body)
+      setSendError(err.message)
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
@@ -188,7 +222,11 @@ function MessageThread({ prospect }) {
             {prospect.owner.charAt(0)}{prospect.owner.split(' ')[1]?.charAt(0) || ''}
           </div>
           <div>
-            <p style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.8)', margin: 0 }}>{prospect.owner}</p>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.8)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {prospect.owner}
+              <BrandPill brand={prospect.brand} />
+              {prospect.fromNumber && <span style={{ fontSize: '10px', fontWeight: 400, color: 'rgba(255,255,255,0.25)' }}>from {prospect.fromNumber}</span>}
+            </p>
             <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', margin: '1px 0 0' }}>{prospect.name} · {prospect.trade}</p>
           </div>
         </div>
@@ -212,7 +250,7 @@ function MessageThread({ prospect }) {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-        {prospect.messages.map((msg, i) => (
+        {allMessages.map((msg, i) => (
           <div key={i} className={`flex ${msg.type === 'out' ? 'justify-end' : 'justify-start'}`}>
             <div style={{
               maxWidth: '80%',
@@ -229,6 +267,14 @@ function MessageThread({ prospect }) {
                   month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
                 })}
               </p>
+              {msg.step && (() => {
+                const st = getSequenceStep(msg.step)
+                return (
+                  <span style={{ display: 'inline-block', marginTop: '4px', fontSize: '8px', padding: '1px 7px', borderRadius: '20px', background: st.color, color: 'rgba(255,255,255,0.85)' }}>
+                    {st.label}
+                  </span>
+                )
+              })()}
             </div>
           </div>
         ))}
@@ -244,16 +290,15 @@ function MessageThread({ prospect }) {
             placeholder="Type a message..."
             style={{ flex: 1, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px 14px', fontSize: '13px', color: 'rgba(255,255,255,0.8)', outline: 'none' }}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && newMessage.trim()) {
-                setNewMessage('')
-              }
+              if (e.key === 'Enter') handleSend()
             }}
           />
-          <button style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.3), rgba(236,72,153,0.2))', border: '1px solid rgba(139,92,246,0.15)', color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontWeight: 500, padding: '10px 20px', borderRadius: '12px', cursor: 'pointer' }}>
-            Send
+          <button onClick={handleSend} disabled={sending || !newMessage.trim()} style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.3), rgba(236,72,153,0.2))', border: '1px solid rgba(139,92,246,0.15)', color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontWeight: 500, padding: '10px 20px', borderRadius: '12px', cursor: 'pointer', opacity: sending || !newMessage.trim() ? 0.5 : 1 }}>
+            {sending ? 'Sending...' : 'Send'}
           </button>
         </div>
-        <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.1)', marginTop: '6px', paddingLeft: '4px' }}>Sends via Kixie API · Not yet connected</p>
+        {sendError && <p style={{ fontSize: '10px', color: 'rgba(248,113,113,0.8)', marginTop: '6px', paddingLeft: '4px' }}>{sendError}</p>}
+        <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.1)', marginTop: '6px', paddingLeft: '4px' }}>Sends via Kixie API{prospect.fromNumber ? ` · from ${prospect.fromNumber}` : ''}</p>
       </div>
     </div>
   )
@@ -297,10 +342,24 @@ function ClickedList({ prospects }) {
   )
 }
 
+function chipStyle(active, color) {
+  return {
+    fontSize: '9px',
+    padding: '3px 9px',
+    borderRadius: '20px',
+    cursor: 'pointer',
+    border: active ? '1px solid rgba(255,255,255,0.25)' : '1px solid transparent',
+    background: active ? (color || 'rgba(139,92,246,0.2)') : 'rgba(255,255,255,0.03)',
+    color: active ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
+  }
+}
+
 export default function MessagesPage() {
   const { prospects, loading } = useProspects()
   const [selected, setSelected] = useState(null)
   const [hideNonResponders, setHideNonResponders] = useState(false)
+  const [brandFilter, setBrandFilter] = useState('all')
+  const [stepFilter, setStepFilter] = useState('all')
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
@@ -321,6 +380,13 @@ export default function MessagesPage() {
 
   if (hideNonResponders) {
     withMessages = withMessages.filter(p => p.messages.some(m => m.type === 'in'))
+  }
+
+  if (brandFilter !== 'all') {
+    withMessages = withMessages.filter(p => p.brand === brandFilter)
+  }
+  if (stepFilter !== 'all') {
+    withMessages = withMessages.filter(p => p.messages.some(m => m.step === stepFilter))
   }
 
   const responderCount = prospects.filter(p => p.messages.some(m => m.type === 'in')).length
@@ -355,6 +421,20 @@ export default function MessagesPage() {
               >
                 {hideNonResponders ? 'Show all' : 'Responded only'}
               </button>
+            </div>
+          </div>
+          {/* Filter chips */}
+          <div style={{ padding: '8px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '6px' }}>
+              {[{ id: 'all', label: 'All brands' }, ...BRANDS].map(b => (
+                <button key={b.id} onClick={() => setBrandFilter(b.id)} style={chipStyle(brandFilter === b.id)}>{b.label}</button>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+              <button onClick={() => setStepFilter('all')} style={chipStyle(stepFilter === 'all')}>All steps</button>
+              {SEQUENCE_STEPS.map(s => (
+                <button key={s.id} onClick={() => setStepFilter(s.id)} style={chipStyle(stepFilter === s.id, s.color)}>{s.label}</button>
+              ))}
             </div>
           </div>
           {withMessages.map(p => (

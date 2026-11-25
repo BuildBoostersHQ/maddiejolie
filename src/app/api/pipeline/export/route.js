@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { requireUser } from '@/lib/apiAuth'
 import { NextResponse } from 'next/server'
 import { assignKixieNumber } from '@/lib/constants'
 
@@ -26,6 +27,8 @@ const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY
  *   Trade, City, State, Brand, Score, Prospect ID
  */
 export async function GET(request) {
+  const auth = await requireUser(request)
+  if (auth.error) return auth.error
   try {
     const { searchParams } = new URL(request.url)
     const brand = searchParams.get('brand')
@@ -162,6 +165,8 @@ export async function GET(request) {
  * Use this to preview what will be exported before downloading.
  */
 export async function POST(request) {
+  const auth = await requireUser(request)
+  if (auth.error) return auth.error
   try {
     const { brand, trade, batch_id, stage = 'prospect', city, limit = 500 } = await request.json()
 

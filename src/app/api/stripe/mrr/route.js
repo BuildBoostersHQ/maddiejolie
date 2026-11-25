@@ -1,11 +1,14 @@
 import Stripe from 'stripe'
+import { requireUser } from '@/lib/apiAuth'
 import { NextResponse } from 'next/server'
 
 const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY)
   : null
 
-export async function GET() {
+export async function GET(request) {
+  const auth = await requireUser(request)
+  if (auth.error) return auth.error
   if (!stripe) {
     return NextResponse.json({
       error: 'Stripe not configured',

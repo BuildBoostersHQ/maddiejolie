@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { requireUser } from '@/lib/apiAuth'
 import { NextResponse } from 'next/server'
 
 const TWILIO_SID = process.env.TWILIO_ACCOUNT_SID
@@ -9,7 +10,9 @@ const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
 // Verify a batch of unverified phone numbers
 // Called repeatedly until all are verified
-export async function POST() {
+export async function POST(request) {
+  const auth = await requireUser(request)
+  if (auth.error) return auth.error
   try {
     if (!TWILIO_SID || !TWILIO_TOKEN) {
       return NextResponse.json({ error: 'Twilio credentials not configured' }, { status: 500 })

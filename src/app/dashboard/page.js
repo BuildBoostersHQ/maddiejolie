@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { authFetch } from '@/lib/authFetch'
 import Link from 'next/link'
 import { STAGES, getStage } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
@@ -12,7 +13,7 @@ function useStripeMRR() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/stripe/mrr')
+    authFetch('/api/stripe/mrr')
       .then(r => r.json())
       .then(d => { if (!d.error) setData(d) })
       .catch(() => {})

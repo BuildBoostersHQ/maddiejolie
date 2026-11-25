@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { authFetch } from '@/lib/authFetch'
 import { STAGES, getStage, SEQUENCE_STEPS, getSequenceStep, BRANDS } from '@/lib/constants'
 import BrandPill from '@/components/BrandPill'
 import { useProspects } from '@/lib/useProspects'
@@ -193,7 +194,7 @@ function MessageThread({ prospect }) {
     setLocalMessages(prev => [...prev, optimistic])
     setNewMessage('')
     try {
-      const res = await fetch('/api/kixie/send', {
+      const res = await authFetch('/api/kixie/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prospect_id: prospect.id, body, sequence_step: 'reply' }),

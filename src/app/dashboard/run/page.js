@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { authFetch } from '@/lib/authFetch'
 import { TRADES, BRANDS } from '@/lib/constants'
 
 const AREAS = [
@@ -58,7 +59,7 @@ export default function RunPipelinePage() {
       if (exp.brand === 'all') delete body.brand
       if (!body.trade) delete body.trade
       if (!body.city) delete body.city
-      const res = await fetch('/api/pipeline/export', {
+      const res = await authFetch('/api/pipeline/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -73,8 +74,27 @@ export default function RunPipelinePage() {
     }
   }
 
-  function downloadCsv() {
-    window.open(`/api/pipeline/export?${exportParams().toString()}`, '_blank')
+  async function downloadCsv() {
+    setExportError('')
+    try {
+      const res = await authFetch(`/api/pipeline/export?${exportParams().toString()}`)
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || `Export failed (${res.status})`)
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      const cd = res.headers.get('Content-Disposition') || ''
+      a.href = url
+      a.download = (cd.match(/filename="([^"]+)"/) || [])[1] || 'kixie-export.csv'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      setExportError(err.message)
+    }
   }
 
   function addLog(msg) {
@@ -88,7 +108,7 @@ export default function RunPipelinePage() {
     addLog(`Starting pull: ${trade} in ${customArea || area} (limit: ${limit})`)
 
     try {
-      const res = await fetch('/api/pipeline/pull', {
+      const res = await authFetch('/api/pipeline/pull', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -141,7 +161,7 @@ export default function RunPipelinePage() {
     while (true) {
       rounds++
       try {
-        const res = await fetch('/api/pipeline/verify', {
+        const res = await authFetch('/api/pipeline/verify', {
           method: 'POST',
         })
 

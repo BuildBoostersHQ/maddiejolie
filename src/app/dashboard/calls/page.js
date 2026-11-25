@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { authFetch } from '@/lib/authFetch'
 import { CALL_OUTCOMES } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
 
@@ -73,7 +74,7 @@ export default function CallsPage() {
 
   async function fetchCalls() {
     try {
-      const res = await fetch('/api/calls')
+      const res = await authFetch('/api/calls')
       const data = await res.json()
       if (data.calls) setCalls(data.calls)
     } catch (err) {}
@@ -85,7 +86,7 @@ export default function CallsPage() {
     setSaving(true)
 
     try {
-      await fetch('/api/calls', {
+      await authFetch('/api/calls', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

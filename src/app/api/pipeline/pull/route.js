@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { requireUser } from '@/lib/apiAuth'
 import { NextResponse } from 'next/server'
 
 const OUTSCRAPER_KEY = process.env.OUTSCRAPER_API_KEY
@@ -55,6 +56,8 @@ function getTopReviewerName(p) {
 }
 
 export async function POST(request) {
+  const auth = await requireUser(request)
+  if (auth.error) return auth.error
   try {
     const { area, trade, limit = 50, brand = 'split' } = await request.json()
 

@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { requireUser } from '@/lib/apiAuth'
 import { NextResponse } from 'next/server'
 import { assignKixieNumber } from '@/lib/constants'
 import { sendKixieSms, isOptOut } from '@/lib/kixie'
@@ -12,6 +13,8 @@ const STEP_TO_STAGE = { sms1: 'sms12', sms2: 'sms12', sms3: 'sms3', sms4: 'sms4'
 const NO_REGRESS = ['clicked', 'engaged', 'responded', 'booked', 'closed', 'lost']
 
 export async function POST(request) {
+  const auth = await requireUser(request)
+  if (auth.error) return auth.error
   let payload
   try { payload = await request.json() } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }) }
   const { prospect_id, body, sequence_step } = payload || {}

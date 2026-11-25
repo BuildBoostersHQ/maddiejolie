@@ -5,7 +5,10 @@ import { STAGES, getStage } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
 
 function useStripeMRR() {
-  const [data, setData] = useState({ mrr: 0, clients: 0, mrrGrowth: 0, clientGrowth: 0 })
+  const [data, setData] = useState({
+    mrr: 0, clients: 0, mrrGrowth: 0, clientGrowth: 0,
+    paymentsThisMonth: 0, paymentsLastMonth: 0, paymentsGrowth: 0,
+  })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -100,28 +103,40 @@ export default function DashboardOverview() {
       </div>
 
       {/* Revenue row */}
-      <div className="grid grid-cols-2 gap-3 lg:gap-4">
+      <div className="grid grid-cols-3 gap-3 lg:gap-4">
         <div className="bg-dash-surface border border-dash-border rounded-xl p-4 lg:p-5">
-          <p className="text-xs text-dash-dim uppercase tracking-wider mb-1">Live MRR</p>
+          <p className="text-xs text-dash-dim uppercase tracking-wider mb-1">MRR</p>
           <p className="text-2xl lg:text-3xl font-bold font-heading bg-gradient-to-r bg-clip-text text-transparent"
              style={{ backgroundImage: 'linear-gradient(to right, #6aab7a, #5b9e80)' }}>
             {stripe.loading ? '...' : `$${stripe.mrr.toLocaleString()}`}
           </p>
           {!stripe.loading && (
             <p className={`text-xs mt-1 ${stripe.mrrGrowth >= 0 ? 'text-green-400/70' : 'text-red-400/70'}`}>
-              {stripe.mrrGrowth >= 0 ? '+' : ''}{stripe.mrrGrowth}% from last month
+              {stripe.mrrGrowth >= 0 ? '+' : ''}{stripe.mrrGrowth}%
             </p>
           )}
         </div>
         <div className="bg-dash-surface border border-dash-border rounded-xl p-4 lg:p-5">
-          <p className="text-xs text-dash-dim uppercase tracking-wider mb-1">Active clients</p>
+          <p className="text-xs text-dash-dim uppercase tracking-wider mb-1">Clients</p>
           <p className="text-2xl lg:text-3xl font-bold font-heading bg-gradient-to-r bg-clip-text text-transparent"
              style={{ backgroundImage: 'linear-gradient(to right, #b896c7, #c494a8)' }}>
             {stripe.loading ? '...' : stripe.clients}
           </p>
           {!stripe.loading && (
             <p className={`text-xs mt-1 ${stripe.clientGrowth >= 0 ? 'text-green-400/70' : 'text-red-400/70'}`}>
-              {stripe.clientGrowth >= 0 ? '+' : ''}{stripe.clientGrowth}% from last month
+              {stripe.clientGrowth >= 0 ? '+' : ''}{stripe.clientGrowth}%
+            </p>
+          )}
+        </div>
+        <div className="bg-dash-surface border border-dash-border rounded-xl p-4 lg:p-5">
+          <p className="text-xs text-dash-dim uppercase tracking-wider mb-1">Payments this month</p>
+          <p className="text-2xl lg:text-3xl font-bold font-heading bg-gradient-to-r bg-clip-text text-transparent"
+             style={{ backgroundImage: 'linear-gradient(to right, #c89f80, #c4a76a)' }}>
+            {stripe.loading ? '...' : `$${stripe.paymentsThisMonth.toLocaleString()}`}
+          </p>
+          {!stripe.loading && (
+            <p className={`text-xs mt-1 ${stripe.paymentsGrowth >= 0 ? 'text-green-400/70' : 'text-red-400/70'}`}>
+              {stripe.paymentsGrowth >= 0 ? '+' : ''}{stripe.paymentsGrowth}% vs last month
             </p>
           )}
         </div>

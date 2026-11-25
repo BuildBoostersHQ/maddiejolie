@@ -47,19 +47,21 @@ export const BRANDS = [
 ]
 
 // Update these URLs as you set them up — this is the ONE place they live.
-// Calendar: paste your GHL booking link here
+// Calendar: branded booking pages on each domain
 // Pricing: build a /pricing page or link to your pricing PDF
 // VSL: upload your video and paste the link here
 export const BRAND_LINKS = {
   mj: {
-    calendar: '', // paste your GHL calendar link here
+    calendar: 'https://maddiejolie.com/book',
     pricing: '',  // paste your pricing page URL here
     vsl: '',      // paste your VSL video URL here
+    calendarEmbed: 'https://api.buildboosters.com/widget/booking/6KwM8Zzp23FeEW0wWTNs',
   },
   bb: {
-    calendar: '', // paste your GHL calendar link here
+    calendar: 'https://api.buildboosters.com/widget/bookings/buildboostersdemo',
     pricing: '',  // paste your pricing page URL here
     vsl: '',      // paste your VSL video URL here
+    calendarEmbed: 'https://api.buildboosters.com/widget/bookings/buildboostersdemo',
   },
 }
 

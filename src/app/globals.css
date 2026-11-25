@@ -2,32 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
-/* Status gradient badges */
-.status-new { background: linear-gradient(135deg, #3b82f6, #6366f1); }
-.status-sms1 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
-.status-sms2 { background: linear-gradient(135deg, #8b5cf6, #a855f7); }
-.status-vm { background: linear-gradient(135deg, #a855f7, #d946ef); }
-.status-sms3 { background: linear-gradient(135deg, #d946ef, #ec4899); }
-.status-sms4 { background: linear-gradient(135deg, #ec4899, #f43f5e); }
-.status-bye { background: linear-gradient(135deg, #f43f5e, #f97316); }
-.status-clicked { background: linear-gradient(135deg, #e879f9, #f472b6); }
-.status-responded { background: linear-gradient(135deg, #f97316, #f59e0b); }
-.status-called { background: linear-gradient(135deg, #f59e0b, #eab308); }
-.status-closed { background: linear-gradient(135deg, #22c55e, #10b981); }
-.status-lost { background: linear-gradient(135deg, #52525b, #3f3f46); }
+/* Status gradient badges — muted, sophisticated tones */
+.status-new { background: linear-gradient(135deg, #64748b, #7181a0); }
+.status-sms1 { background: linear-gradient(135deg, #7c83b8, #8e8fc8); }
+.status-sms2 { background: linear-gradient(135deg, #8e8fc8, #a09bd4); }
+.status-vm { background: linear-gradient(135deg, #a09bd4, #b89fcc); }
+.status-sms3 { background: linear-gradient(135deg, #b89fcc, #c89cba); }
+.status-sms4 { background: linear-gradient(135deg, #c89cba, #cc9299); }
+.status-bye { background: linear-gradient(135deg, #cc9299, #c89f80); }
+.status-clicked { background: linear-gradient(135deg, #b896c7, #c494a8); }
+.status-responded { background: linear-gradient(135deg, #c89f80, #c4a76a); }
+.status-called { background: linear-gradient(135deg, #c4a76a, #b8ad5a); }
+.status-closed { background: linear-gradient(135deg, #6aab7a, #5b9e80); }
+.status-lost { background: linear-gradient(135deg, #5a5a5e, #4a4a4e); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #555; }
-
-/* Glow effect for hot leads */
-.glow-hot {
-  box-shadow: 0 0 20px rgba(249, 115, 22, 0.15), 0 0 40px rgba(249, 115, 22, 0.05);
-}
 
 /* Smooth transitions */
 .transition-smooth {

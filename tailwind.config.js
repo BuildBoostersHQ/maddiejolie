@@ -6,17 +6,18 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Plus Jakarta Sans', '-apple-system', 'system-ui', 'sans-serif'],
+        heading: ['Figtree', '-apple-system', 'system-ui', 'sans-serif'],
+        sans: ['Poppins', '-apple-system', 'system-ui', 'sans-serif'],
       },
       colors: {
         dash: {
-          bg: '#0a0a0a',
-          surface: '#141414',
-          border: '#1f1f1f',
-          hover: '#1a1a1a',
-          text: '#fafafa',
-          muted: '#a0a0a0',
-          dim: '#666666',
+          bg: '#0c0c0c',
+          surface: '#151515',
+          border: '#222222',
+          hover: '#1c1c1c',
+          text: '#e8e8e8',
+          muted: '#999999',
+          dim: '#5a5a5a',
         },
       },
     },

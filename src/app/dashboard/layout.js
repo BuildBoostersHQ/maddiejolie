@@ -27,8 +27,8 @@ export default function DashboardLayout({ children }) {
               <path d="M3 12h18M3 6h18M3 18h18" />
             </svg>
           </button>
-          <Link href="/dashboard" className="text-lg font-bold tracking-tight">
-            <span className="bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">
+          <Link href="/dashboard" className="text-lg font-bold tracking-tight font-heading">
+            <span className="bg-gradient-to-r from-violet-300/80 to-rose-300/80 bg-clip-text text-transparent">
               pipeline
             </span>
           </Link>

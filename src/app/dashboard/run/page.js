@@ -30,7 +30,7 @@ export default function RunPipelinePage() {
   const [area, setArea] = useState('Miami, FL')
   const [customArea, setCustomArea] = useState('')
   const [trade, setTrade] = useState('handyman')
-  const [brand, setBrand] = useState('split')
+  const [brand, setBrand] = useState('mj')
   const [limit, setLimit] = useState(500)
   const [step, setStep] = useState('idle') // idle, pulling, verifying, done
   const [log, setLog] = useState([])

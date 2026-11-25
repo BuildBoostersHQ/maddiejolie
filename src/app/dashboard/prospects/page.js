@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { STAGES, TRADES, getStage } from '@/lib/constants'
+import { STAGES, TRADES, BRAND_LINKS, getStage } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
 
 function ProspectRow({ prospect, onSelect, isSelected }) {
@@ -130,47 +130,31 @@ function ProspectDetail({ prospect, onClose }) {
         </a>
       </div>
 
-      {/* Quick send */}
+      {/* Quick send — links configured in /src/lib/constants.js BRAND_LINKS */}
       <div className="px-4 py-2.5 border-b border-dash-border/50 flex gap-2">
-        <button
-          onClick={() => {
-            const brand = prospect.brand || 'mj'
-            const links = {
-              mj: 'https://link.to/mj-calendar',
-              bb: 'https://link.to/bb-calendar',
-            }
-            setNewMessage(`Hey ${prospect.owner?.split(' ')[0] || 'there'}! Here's a link to book a quick call: ${links[brand]}`)
-          }}
-          className="flex-1 py-2 rounded-lg text-[11px] font-medium transition-smooth bg-sky-500/10 hover:bg-sky-500/15 text-sky-400 border border-sky-500/10"
-        >
-          📅 Calendar
-        </button>
-        <button
-          onClick={() => {
-            const brand = prospect.brand || 'mj'
-            const links = {
-              mj: 'https://maddiejolie.com/pricing',
-              bb: 'https://buildboosters.com/pricing',
-            }
-            setNewMessage(`Hey ${prospect.owner?.split(' ')[0] || 'there'}! Here's our pricing info: ${links[brand]}`)
-          }}
-          className="flex-1 py-2 rounded-lg text-[11px] font-medium transition-smooth bg-green-500/10 hover:bg-green-500/15 text-green-400 border border-green-500/10"
-        >
-          💰 Pricing
-        </button>
-        <button
-          onClick={() => {
-            const brand = prospect.brand || 'mj'
-            const links = {
-              mj: 'https://maddiejolie.com/vsl',
-              bb: 'https://buildboosters.com/vsl',
-            }
-            setNewMessage(`Hey ${prospect.owner?.split(' ')[0] || 'there'}! Check out this quick video about how we help contractors like you: ${links[brand]}`)
-          }}
-          className="flex-1 py-2 rounded-lg text-[11px] font-medium transition-smooth bg-pink-500/10 hover:bg-pink-500/15 text-pink-400 border border-pink-500/10"
-        >
-          🎬 VSL
-        </button>
+        {[
+          { label: '📅 Calendar', key: 'calendar', msg: "Here's a link to book a quick call", color: 'sky' },
+          { label: '💰 Pricing', key: 'pricing', msg: "Here's our pricing info", color: 'green' },
+          { label: '🎬 VSL', key: 'vsl', msg: 'Check out this quick video about how we help contractors like you', color: 'pink' },
+        ].map(btn => {
+          const brand = prospect.brand || 'mj'
+          const url = BRAND_LINKS[brand]?.[btn.key]
+          return (
+            <button
+              key={btn.key}
+              onClick={() => {
+                if (!url) {
+                  alert(`No ${btn.key} link set yet — add it in src/lib/constants.js under BRAND_LINKS`)
+                  return
+                }
+                setNewMessage(`Hey ${prospect.owner?.split(' ')[0] || 'there'}! ${btn.msg}: ${url}`)
+              }}
+              className={`flex-1 py-2 rounded-lg text-[11px] font-medium transition-smooth bg-${btn.color}-500/10 hover:bg-${btn.color}-500/15 text-${btn.color}-400 border border-${btn.color}-500/10 ${!url ? 'opacity-40' : ''}`}
+            >
+              {btn.label}
+            </button>
+          )
+        })}
       </div>
 
       {/* Messages */}

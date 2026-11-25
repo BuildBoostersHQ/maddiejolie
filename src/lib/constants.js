@@ -46,16 +46,20 @@ export const BRANDS = [
   { id: 'bb', label: 'Build Boosters', domain: 'buildboosters.com' },
 ]
 
+// Update these URLs as you set them up — this is the ONE place they live.
+// Calendar: paste your GHL booking link here
+// Pricing: build a /pricing page or link to your pricing PDF
+// VSL: upload your video and paste the link here
 export const BRAND_LINKS = {
   mj: {
-    calendar: 'https://link.to/mj-calendar', // placeholder
-    pricing: 'https://maddiejolie.com/pricing', // placeholder
-    vsl: 'https://maddiejolie.com/vsl', // placeholder
+    calendar: '', // paste your GHL calendar link here
+    pricing: '',  // paste your pricing page URL here
+    vsl: '',      // paste your VSL video URL here
   },
   bb: {
-    calendar: 'https://link.to/bb-calendar', // placeholder
-    pricing: 'https://buildboosters.com/pricing', // placeholder
-    vsl: 'https://buildboosters.com/vsl', // placeholder
+    calendar: '', // paste your GHL calendar link here
+    pricing: '',  // paste your pricing page URL here
+    vsl: '',      // paste your VSL video URL here
   },
 }
 

@@ -86,30 +86,22 @@ function BrandColumn({ label, emoji, prospects, gradient }) {
         </p>
       </div>
       <div className="space-y-3">
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-dash-muted">Prospects</span>
-          <span className="text-sm font-bold">{total}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-dash-muted">Clicked</span>
-          <span className="text-sm font-bold">{clicked} <span className="text-xs text-dash-dim font-normal">({pct(clicked)}%)</span></span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-dash-muted">Engaged (60s+)</span>
-          <span className="text-sm font-bold">{engaged} <span className="text-xs text-dash-dim font-normal">({pct(engaged)}%)</span></span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-dash-muted">Responded</span>
-          <span className="text-sm font-bold">{responded} <span className="text-xs text-dash-dim font-normal">({pct(responded)}%)</span></span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-dash-muted">Booked</span>
-          <span className="text-sm font-bold">{booked} <span className="text-xs text-dash-dim font-normal">({pct(booked)}%)</span></span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-dash-muted">Closed</span>
-          <span className="text-sm font-bold text-green-400">{closed} <span className="text-xs text-dash-dim font-normal">({pct(closed)}%)</span></span>
-        </div>
+        {[
+          { label: 'Prospects', val: total, showPct: false },
+          { label: 'Clicked', val: clicked, showPct: true },
+          { label: 'Engaged (60s+)', val: engaged, showPct: true },
+          { label: 'Responded', val: responded, showPct: true },
+          { label: 'Booked', val: booked, showPct: true },
+          { label: 'Closed', val: closed, showPct: true, color: 'text-green-400' },
+        ].map(row => (
+          <div key={row.label} className="flex justify-between items-center">
+            <span className="text-xs text-dash-muted">{row.label}</span>
+            <div className="flex items-baseline gap-1.5 tabular-nums">
+              <span className={`text-sm font-bold w-6 text-right ${row.color || ''}`}>{row.val}</span>
+              {row.showPct && <span className="text-xs text-dash-dim w-10 text-right">({pct(row.val)}%)</span>}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

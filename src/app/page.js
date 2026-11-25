@@ -1,7 +1,5 @@
-import { redirect } from 'next/navigation'
-
-// Root page redirects to the static landing page
-// The landing page is at /landing.html (served from public/)
+// Root page — served by rewrite to /landing.html in next.config.js
+// This file exists so Next.js doesn't 404 on /
 export default function Home() {
-  redirect('/landing.html')
+  return null
 }

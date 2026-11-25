@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* Status gradient badges */
+.status-new { background: linear-gradient(135deg, #3b82f6, #6366f1); }
+.status-sms1 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.status-sms2 { background: linear-gradient(135deg, #8b5cf6, #a855f7); }
+.status-vm { background: linear-gradient(135deg, #a855f7, #d946ef); }
+.status-sms3 { background: linear-gradient(135deg, #d946ef, #ec4899); }
+.status-sms4 { background: linear-gradient(135deg, #ec4899, #f43f5e); }
+.status-bye { background: linear-gradient(135deg, #f43f5e, #f97316); }
+.status-clicked { background: linear-gradient(135deg, #e879f9, #f472b6); }
+.status-responded { background: linear-gradient(135deg, #f97316, #f59e0b); }
+.status-called { background: linear-gradient(135deg, #f59e0b, #eab308); }
+.status-closed { background: linear-gradient(135deg, #22c55e, #10b981); }
+.status-lost { background: linear-gradient(135deg, #52525b, #3f3f46); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Glow effect for hot leads */
+.glow-hot {
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.15), 0 0 40px rgba(249, 115, 22, 0.05);
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

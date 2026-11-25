@@ -111,13 +111,10 @@
   background: #0f1f33;
   border: 1px solid rgba(79,195,247,0.12);
   border-radius: 16px;
-  position: relative;
   overflow: hidden;
-  height: 540px;
 }
 .bp-cal iframe {
-  width: calc(100% + 20px); height: 700px; border: none; display: block;
-  color-scheme: dark;
+  width: calc(100% + 18px); height: 580px; border: none; display: block;
 }
 .bp-foot {
   text-align: center; padding: 16px 0 40px;
@@ -125,27 +122,9 @@
 .bp-foot p {
   font-size: 12px; color: rgba(79,195,247,0.25);
 }
-/* Booking + thank you page scrollbar — hide it completely */
-.bp {
-  scrollbar-width: none;
-}
-.bp::-webkit-scrollbar { display: none; }
-
-/* Loading shimmer while iframe loads */
-.bp-cal::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: #0f1f33;
-  z-index: 1;
-  animation: bp-fade 1.2s ease-out 1.5s forwards;
-}
-@keyframes bp-fade {
-  to { opacity: 0; pointer-events: none; }
-}
 
 @media (max-width: 600px) {
   .bp-hero { padding: 36px 20px 28px; }
   .bp-photo { width: 76px; height: 76px; }
-  .bp-cal { height: 500px; }
+  .bp-cal iframe { height: 540px; }
 }

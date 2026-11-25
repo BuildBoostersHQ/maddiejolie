@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 const navItems = [
   { href: '/dashboard', label: 'Overview', icon: '◎' },
@@ -12,7 +13,51 @@ const navItems = [
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname()
+  const router = useRouter()
   const [mobileNav, setMobileNav] = useState(false)
+  const [authChecked, setAuthChecked] = useState(false)
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    if (!supabase) {
+      setAuthChecked(true)
+      return
+    }
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        router.push('/login')
+      } else {
+        setUser(session.user)
+        setAuthChecked(true)
+      }
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        router.push('/login')
+      } else {
+        setUser(session.user)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [router])
+
+  async function handleSignOut() {
+    if (supabase) {
+      await supabase.auth.signOut()
+      router.push('/login')
+    }
+  }
+
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen bg-dash-bg flex items-center justify-center">
+        <p className="text-sm text-dash-dim">Loading...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-dash-bg text-dash-text">
@@ -38,9 +83,13 @@ export default function DashboardLayout({ children }) {
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             Live
           </div>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center text-xs font-bold text-white">
+          <button
+            onClick={handleSignOut}
+            className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center text-xs font-bold text-white hover:opacity-80 transition-smooth"
+            title="Sign out"
+          >
             M
-          </div>
+          </button>
         </div>
       </header>
 

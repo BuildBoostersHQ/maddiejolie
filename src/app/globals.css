@@ -112,11 +112,11 @@
   border: 1px solid rgba(79,195,247,0.12);
   border-radius: 16px;
   position: relative;
-  height: 390px;
   overflow: hidden;
 }
 .bp-cal iframe {
-  width: 100%; height: 600px; border: none; display: block;
+  width: 100%; height: 580px; border: none; display: block;
+  color-scheme: dark;
 }
 .bp-foot {
   text-align: center; padding: 16px 0 40px;
@@ -124,18 +124,27 @@
 .bp-foot p {
   font-size: 12px; color: rgba(79,195,247,0.25);
 }
-/* Booking + thank you page scrollbar */
-.bp, .bp * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(79,195,247,0.15) transparent;
+/* Booking + thank you page scrollbar — hide it completely */
+.bp {
+  scrollbar-width: none;
 }
-.bp ::-webkit-scrollbar, .bp::-webkit-scrollbar { width: 4px; height: 4px; }
-.bp ::-webkit-scrollbar-track, .bp::-webkit-scrollbar-track { background: transparent; }
-.bp ::-webkit-scrollbar-thumb, .bp::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.15); border-radius: 4px; }
-.bp ::-webkit-scrollbar-thumb:hover, .bp::-webkit-scrollbar-thumb:hover { background: rgba(79,195,247,0.3); }
+.bp::-webkit-scrollbar { display: none; }
+
+/* Loading shimmer while iframe loads */
+.bp-cal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #0f1f33;
+  z-index: 1;
+  animation: bp-fade 1.2s ease-out 1.5s forwards;
+}
+@keyframes bp-fade {
+  to { opacity: 0; pointer-events: none; }
+}
 
 @media (max-width: 600px) {
   .bp-hero { padding: 36px 20px 28px; }
   .bp-photo { width: 76px; height: 76px; }
-  .bp-cal { height: 440px; }
+  .bp-cal iframe { height: 540px; }
 }

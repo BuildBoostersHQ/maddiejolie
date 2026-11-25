@@ -1,11 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  async rewrites() {
-    return [
-      { source: '/', destination: '/landing.html' },
-    ]
-  },
   async redirects() {
     return [
       { source: '/calendar', destination: '/book', permanent: true },

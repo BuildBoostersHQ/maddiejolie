@@ -1,7 +1,7 @@
 import { BRAND_LINKS } from '@/lib/constants'
 
 export const metadata = {
-  title: 'Book a Call — Madeleine Jolie',
+  title: 'Book a Call | maddiejolie',
   description: 'Schedule a quick call to see how a custom website can grow your contracting business.',
 }
 
@@ -16,165 +16,150 @@ export default function BookPage() {
         .bp * { margin: 0; padding: 0; box-sizing: border-box; }
         .bp {
           font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
-          background: #091624;
+          background: linear-gradient(180deg, #0d1e30 0%, #091624 40%, #050c16 100%);
           color: #4fc3f7;
           -webkit-font-smoothing: antialiased;
+          line-height: 1.6;
           min-height: 100vh;
           position: relative;
           overflow-x: hidden;
         }
-
-        /* Ambient glow behind the content */
-        .bp::before {
-          content: '';
-          position: fixed;
-          top: -20%;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 800px;
-          height: 600px;
-          background: radial-gradient(ellipse, rgba(79,195,247,0.06) 0%, rgba(245,166,35,0.03) 40%, transparent 70%);
-          pointer-events: none;
-          z-index: 0;
+        .bp-grid {
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          pointer-events: none; z-index: 0;
+          background-image:
+            linear-gradient(rgba(79,195,247,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(79,195,247,0.04) 1px, transparent 1px);
+          background-size: 60px 60px;
         }
-
-        .bp-content { position: relative; z-index: 1; max-width: 540px; margin: 0 auto; padding: 0 20px; }
+        .bp-z { position: relative; z-index: 1; }
 
         /* Nav */
         .bp-nav {
-          padding: 24px 0 0;
-          text-align: center;
+          max-width: 960px; margin: 0 auto; padding: 20px 24px;
+          display: flex; align-items: center; justify-content: space-between;
         }
-        .bp-name {
-          font-weight: 800;
-          font-size: 15px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: rgba(79,195,247,0.4);
+        .bp-logo {
+          font-weight: 800; font-size: 20px; letter-spacing: -0.02em;
+          color: #4fc3f7; text-decoration: none;
         }
+        .bp-back {
+          font-size: 13px; font-weight: 600; color: rgba(79,195,247,0.5);
+          text-decoration: none; transition: color 0.15s;
+        }
+        .bp-back:hover { color: rgba(79,195,247,0.8); }
 
         /* Hero */
         .bp-hero {
           text-align: center;
-          padding: 48px 0 36px;
-        }
-        .bp-hero img {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          object-fit: cover;
-          object-position: center 20%;
-          margin-bottom: 24px;
-          border: 2px solid rgba(255,255,255,0.15);
-          box-shadow: 0 0 40px rgba(79,195,247,0.12), 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .bp-wave {
-          font-size: 14px;
-          font-weight: 600;
-          color: rgba(79,195,247,0.6);
-          margin-bottom: 14px;
-        }
-        .bp-hero h1 {
-          font-size: clamp(22px, 5vw, 30px);
-          font-weight: 800;
-          line-height: 1.25;
-          letter-spacing: -0.025em;
-          color: #fff;
-          margin-bottom: 16px;
-        }
-        .bp-hero h1 em {
-          font-style: italic;
-          color: #4fc3f7;
-        }
-        .bp-desc {
-          font-size: 14px;
-          color: rgba(79,195,247,0.55);
-          line-height: 1.75;
-          max-width: 420px;
+          padding: 50px 24px 36px;
+          max-width: 580px;
           margin: 0 auto;
         }
-
-        /* Divider */
-        .bp-divider {
-          width: 60px;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(245,166,35,0.4), transparent);
-          margin: 0 auto 36px;
+        .bp-photo {
+          width: 90px; height: 90px; border-radius: 50%;
+          object-fit: cover; object-position: center 20%;
+          margin: 0 auto 20px;
+          display: block;
+          border: 3px solid rgba(255,255,255,0.3);
+          box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+        }
+        .bp-wave {
+          font-size: 14px; font-weight: 600;
+          color: rgba(79,195,247,0.7); margin-bottom: 12px;
+        }
+        .bp-hero h1 {
+          font-size: clamp(24px, 4.5vw, 36px); font-weight: 800;
+          line-height: 1.2; letter-spacing: -0.025em;
+          margin-bottom: 16px; color: #fff;
+        }
+        .bp-hero h1 em { font-style: italic; color: #4fc3f7; }
+        .bp-sub {
+          font-size: 15px; color: rgba(79,195,247,0.65);
+          max-width: 460px; margin: 0 auto 20px; line-height: 1.7;
         }
 
-        /* Calendar section */
-        .bp-cal-label {
-          text-align: center;
-          font-size: 11px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          color: rgba(245,166,35,0.5);
-          margin-bottom: 14px;
+        /* Badges */
+        .bp-badges {
+          display: flex; justify-content: center; gap: 10px;
+          flex-wrap: wrap;
+        }
+        .bp-badge {
+          font-size: 12px; font-weight: 600; color: #4fc3f7;
+          background: rgba(255,255,255,0.08);
+          backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+          padding: 8px 18px; border-radius: 100px;
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Calendar */
+        .bp-cal-wrap {
+          max-width: 640px; margin: 0 auto; padding: 0 24px 32px;
         }
         .bp-cal {
-          background: #0d1a2a;
-          border: 1px solid rgba(79,195,247,0.08);
-          border-radius: 14px;
+          background: #0f1f33;
+          border: 1px solid rgba(79,195,247,0.12);
+          border-radius: 16px;
           overflow: hidden;
-          box-shadow: 0 8px 40px rgba(0,0,0,0.3);
         }
         .bp-cal iframe {
           width: 100%;
-          min-height: 620px;
+          height: 700px;
           border: none;
           display: block;
         }
 
-        /* Bottom note */
-        .bp-bottom {
-          text-align: center;
-          padding: 28px 0 48px;
+        /* Footer */
+        .bp-foot {
+          text-align: center; padding: 16px 0 40px;
         }
-        .bp-bottom p {
-          font-size: 12px;
-          color: rgba(79,195,247,0.2);
-          line-height: 1.6;
+        .bp-foot p {
+          font-size: 12px; color: rgba(79,195,247,0.25);
         }
 
         @media (max-width: 600px) {
-          .bp-hero { padding: 36px 0 28px; }
-          .bp-hero img { width: 68px; height: 68px; }
-          .bp-cal iframe { min-height: 580px; }
+          .bp-hero { padding: 36px 20px 28px; }
+          .bp-photo { width: 76px; height: 76px; }
+          .bp-cal iframe { height: 620px; }
         }
       `}</style>
 
       <div className="bp">
-        <div className="bp-content">
+        <div className="bp-grid" />
+        <div className="bp-z">
 
-          <div className="bp-nav">
-            <div className="bp-name">maddiejolie</div>
-          </div>
+          <nav className="bp-nav">
+            <a href="/" className="bp-logo">maddiejolie</a>
+            <a href="/" className="bp-back">back to site</a>
+          </nav>
 
           <div className="bp-hero">
-            <img src="/photo.jpg" alt="Maddie" width="80" height="80" />
+            <img className="bp-photo" src="/photo.jpg" alt="Maddie" width="90" height="90" />
             <div className="bp-wave">hey, it's maddie!</div>
             <h1>So happy you liked <em>the site I built you</em></h1>
-            <p className="bp-desc">
-              I pulled your reviews, your photos, everything — and I really think
-              it came out great. I'd love to hop on a quick 15-minute call, walk
-              you through it, and show you a few things I think could really help
-              your business. No pressure at all, just pick a time that works!
+            <p className="bp-sub">
+              I had a lot of fun putting that together, your reviews are seriously
+              impressive and I wanted to make sure the site showed that off. I'd love
+              to hop on a quick call and walk you through everything. Pick a time
+              below and let's chat!
             </p>
+            <div className="bp-badges">
+              <span className="bp-badge">15 min call</span>
+              <span className="bp-badge">No pressure</span>
+              <span className="bp-badge">Starts at $79/mo</span>
+            </div>
           </div>
 
-          <div className="bp-divider" />
-
-          <div className="bp-cal-label">Pick a time</div>
-          <div className="bp-cal">
-            <iframe
-              src={embedUrl}
-              allow="payment"
-              scrolling="no"
-            />
+          <div className="bp-cal-wrap">
+            <div className="bp-cal">
+              <iframe
+                src={embedUrl}
+                allow="payment"
+              />
+            </div>
           </div>
 
-          <div className="bp-bottom">
+          <div className="bp-foot">
             <p>maddiejolie · miami, fl</p>
           </div>
 

@@ -1,16 +1,23 @@
 export const STAGES = [
-  { id: 'new', label: 'New', class: 'status-new' },
-  { id: 'sms1', label: 'SMS 1', class: 'status-sms1' },
-  { id: 'sms2', label: 'SMS 2', class: 'status-sms2' },
-  { id: 'vm', label: 'VM Drop', class: 'status-vm' },
+  { id: 'prospect', label: 'Prospect', class: 'status-new' },
+  { id: 'sms12', label: 'SMS 1+2', class: 'status-sms1' },
   { id: 'sms3', label: 'SMS 3', class: 'status-sms3' },
   { id: 'sms4', label: 'SMS 4', class: 'status-sms4' },
-  { id: 'bye', label: 'Bye', class: 'status-bye' },
+  { id: 'sms5', label: 'SMS 5', class: 'status-bye' },
   { id: 'clicked', label: 'Clicked', class: 'status-clicked' },
+  { id: 'engaged', label: 'Engaged', class: 'status-vm' },
   { id: 'responded', label: 'Responded', class: 'status-responded' },
-  { id: 'called', label: 'Called', class: 'status-called' },
   { id: 'closed', label: 'Closed', class: 'status-closed' },
   { id: 'lost', label: 'Lost', class: 'status-lost' },
+]
+
+export const CALL_OUTCOMES = [
+  { id: 'no_answer', label: 'No answer' },
+  { id: 'voicemail', label: 'Left VM' },
+  { id: 'talked', label: 'Talked' },
+  { id: 'booked', label: 'Booked call' },
+  { id: 'closed', label: 'Closed' },
+  { id: 'not_interested', label: 'Not interested' },
 ]
 
 export const TRADES = [
@@ -83,7 +90,7 @@ export const MOCK_PROSPECTS = [
     state: 'NY',
     rating: 4.9,
     reviews: 89,
-    stage: 'sms2',
+    stage: 'sms12',
     demoUrl: '/demo/brooklyn-hvac-services-brooklyn',
     pageViews: 0,
     timeOnPage: 0,
@@ -194,7 +201,7 @@ export const MOCK_PROSPECTS = [
     state: 'NY',
     rating: 4.4,
     reviews: 19,
-    stage: 'new',
+    stage: 'prospect',
     demoUrl: '/demo/handyman-pro-elmhurst',
     pageViews: 0,
     timeOnPage: 0,

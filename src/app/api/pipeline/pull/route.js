@@ -128,7 +128,7 @@ export async function POST(request) {
         rating: p.rating || 0,
         review_count: p.reviews || 0,
         top_reviewer_name: getTopReviewerName(p),
-        stage: 'new',
+        stage: 'prospect',
         score: scoreProspect(p),
         demo_url: `/demo/${slug}`,
         demo_slug: slug,

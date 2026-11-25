@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Donnie Myers Studio, Inc. — Website Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    /* Theme: Simple (default) */
+    --bg: #ffffff;
+    --bg-alt: #f7f7f5;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --text-mid: #555555;
+    --text-dim: #888888;
+    --accent: #1a1a1a;
+    --accent-bg: #f0f0ee;
+    --border: #e5e5e3;
+    --cta: #1a1a1a;
+    --cta-text: #ffffff;
+    --radius: 12px;
+    --hero-text: #ffffff;
+    --hero-overlay: rgba(0,0,0,0.55);
+  }
+
+  /* Theme: Modern */
+  .theme-modern {
+    --bg: #0d1e30;
+    --bg-alt: #132840;
+    --card: #162d48;
+    --text: #e8edf3;
+    --text-mid: #94a3b8;
+    --text-dim: #64748b;
+    --accent: #4fc3f7;
+    --accent-bg: rgba(79,195,247,0.1);
+    --border: rgba(255,255,255,0.1);
+    --cta: #4fc3f7;
+    --cta-text: #0d1e30;
+    --radius: 12px;
+    --hero-text: #ffffff;
+    --hero-overlay: rgba(13,30,48,0.7);
+  }
+
+  /* Theme: Bold */
+  .theme-bold {
+    --bg: #111111;
+    --bg-alt: #1a1a1a;
+    --card: #222222;
+    --text: #ffffff;
+    --text-mid: #aaaaaa;
+    --text-dim: #777777;
+    --accent: #ff6b35;
+    --accent-bg: rgba(255,107,53,0.1);
+    --border: rgba(255,255,255,0.08);
+    --cta: #ff6b35;
+    --cta-text: #ffffff;
+    --radius: 8px;
+    --hero-text: #ffffff;
+    --hero-overlay: rgba(0,0,0,0.65);
+  }
+
+  /* Theme: Brand (uses extracted colors) */
+  .theme-brand {
+    --bg: var(--brand-bg, #ffffff);
+    --bg-alt: var(--brand-bg-alt, #f5f5f5);
+    --card: var(--brand-card, #ffffff);
+    --text: var(--brand-text, #1a1a1a);
+    --text-mid: var(--brand-text-mid, #555555);
+    --text-dim: var(--brand-text-dim, #888888);
+    --accent: var(--brand-primary, #2563eb);
+    --accent-bg: var(--brand-accent-bg, rgba(37,99,235,0.08));
+    --border: var(--brand-border, #e5e5e3);
+    --cta: var(--brand-primary, #2563eb);
+    --cta-text: #ffffff;
+    --radius: 12px;
+    --hero-text: #ffffff;
+    --hero-overlay: rgba(0,0,0,0.55);
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  /* STYLE PICKER */
+  .style-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .style-bar span { margin-right: 4px; }
+  .style-btn {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .style-btn.active {
+    background: var(--accent);
+    color: var(--cta-text);
+    border-color: var(--accent);
+  }
+
+  /* PREVIEW BANNER */
+  .preview-banner {
+    background: var(--accent);
+    color: var(--cta-text);
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .preview-banner a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg-alt);
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--hero-overlay);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+  }
+  .hero-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--hero-text);
+    margin-bottom: 20px;
+  }
+  .hero-rating .stars { color: #fbbf24; }
+  .hero h1 {
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--hero-text);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .hero p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+  .hero-cta {
+    display: inline-block;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 32px;
+    background: var(--cta);
+    color: var(--cta-text);
+    border: none;
+    border-radius: var(--radius);
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .hero-cta:hover { transform: translateY(-1px); }
+  .hero-call {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+  }
+  .hero-call a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* TRUST BAR */
+  .trust-bar {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px 24px;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .trust-item .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  /* SECTIONS */
+  .wrap { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 60px 0; }
+  .section-title {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 15px;
+    color: var(--text-mid);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .service-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .service-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .service-card p {
+    font-size: 13px;
+    color: var(--text-mid);
+  }
+
+  /* REVIEWS */
+  .reviews-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .review-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .review-stars {
+    color: #fbbf24;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .review-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+  .review-author {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* GALLERY */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+  }
+  .gallery-grid img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+
+  /* QUOTE FORM */
+  .quote-section {
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .quote-section h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .quote-section p {
+    font-size: 14px;
+    color: var(--text-mid);
+    margin-bottom: 24px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+  .form-grid label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .form-grid input,
+  .form-grid textarea,
+  .form-grid select {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+  }
+  .form-grid textarea { resize: vertical; min-height: 80px; }
+  .form-submit {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px;
+    background: var(--cta);
+    color: var(--cta-text);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    width: 100%;
+    margin-top: 8px;
+    transition: transform 0.15s;
+  }
+  .form-submit:hover { transform: translateY(-1px); }
+  .form-consent {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* AREA */
+  .area-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .area-tag {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-radius: 100px;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 24px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* STICKY MOBILE CTA */
+  .mobile-cta {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    padding: 12px 16px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    gap: 8px;
+  }
+  .mobile-cta a {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+  .mobile-cta .btn-call {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+  }
+  .mobile-cta .btn-quote {
+    background: var(--cta);
+    color: var(--cta-text);
+    border: none;
+  }
+
+  @media (max-width: 640px) {
+    .hero { min-height: 360px; padding: 40px 20px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .mobile-cta { display: flex; }
+    body { padding-bottom: 70px; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- STYLE PICKER -->
+<div class="style-bar">
+  <span>Style:</span>
+  <button class="style-btn active" onclick="setTheme('')">Simple</button>
+  <button class="style-btn" onclick="setTheme('theme-modern')">Modern</button>
+  <button class="style-btn" onclick="setTheme('theme-bold')">Bold</button>
+  <button class="style-btn" onclick="setTheme('theme-brand')" id="brand-btn" style="display:none;">Your brand</button>
+</div>
+
+<!-- PREVIEW BANNER -->
+<div class="preview-banner">
+  This is a preview built for Donnie Myers Studio, Inc. by Maddie Jolie
+</div>
+
+<!-- HERO -->
+<div class="hero" style="background-image: url('https://lh3.googleusercontent.com/grass-cs/AABkmLe0f8zPo6jPx_RdO8erKiZmvB9T1j375Xv8VBHw1NTI7Zhl_PBJ6ynZlIpLi_0df-dxlskUGu9uWKVOBFeW2TjCreEfRv64QPEz8_6j82PUQkvubJ2WZBvCiG9ZoMApEyclgY5Miw=w1200-h600-k-no');">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-rating">
+      <span class="stars">★★★★★</span>
+      5 stars from 7 reviews
+    </div>
+    <h1>Donnie Myers Studio, Inc.</h1>
+    <p>Professional painting services in New York. Transform your space.</p>
+    <a class="hero-cta" href="#estimate">Get a free estimate</a>
+    <div class="hero-call">or call <a href="tel:+19177710554">(917) 771-0554</a></div>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span class="dot"></span> Licensed and insured</div>
+  <div class="trust-item"><span class="dot"></span> Free estimates</div>
+  <div class="trust-item"><span class="dot"></span> 5-star rated</div>
+</div>
+
+<!-- SERVICES -->
+<section>
+  <div class="wrap">
+    <div class="section-title">What we do</div>
+    <div class="section-sub">Donnie Myers Studio, Inc. offers the following services in New York and surrounding areas.</div>
+    <div class="services-grid">
+            <div class="service-card">
+        <h3>Painting</h3>
+        <p>Professional painting services for any space</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section style="padding-top: 0;">
+  <div class="wrap">
+    <div class="section-title">Our work</div>
+    <div class="section-sub">Photos from recent projects</div>
+    <div class="gallery-grid">
+            <img src="https://lh3.googleusercontent.com/grass-cs/AABkmLe0f8zPo6jPx_RdO8erKiZmvB9T1j375Xv8VBHw1NTI7Zhl_PBJ6ynZlIpLi_0df-dxlskUGu9uWKVOBFeW2TjCreEfRv64QPEz8_6j82PUQkvubJ2WZBvCiG9ZoMApEyclgY5Miw=w800-h500-k-no=w400-h300-k-no" alt="Work by {{BUSINESS_NAME}}" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/grass-cs/AABkmLe0f8zPo6jPx_RdO8erKiZmvB9T1j375Xv8VBHw1NTI7Zhl_PBJ6ynZlIpLi_0df-dxlskUGu9uWKVOBFeW2TjCreEfRv64QPEz8_6j82PUQkvubJ2WZBvCiG9ZoMApEyclgY5Miw=w800-h500-k-no=w300-h400-k-no" alt="Work by {{BUSINESS_NAME}}" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/grass-cs/AABkmLe0f8zPo6jPx_RdO8erKiZmvB9T1j375Xv8VBHw1NTI7Zhl_PBJ6ynZlIpLi_0df-dxlskUGu9uWKVOBFeW2TjCreEfRv64QPEz8_6j82PUQkvubJ2WZBvCiG9ZoMApEyclgY5Miw=w800-h500-k-no=w400-h400-k-no" alt="Work by {{BUSINESS_NAME}}" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/grass-cs/AABkmLe0f8zPo6jPx_RdO8erKiZmvB9T1j375Xv8VBHw1NTI7Zhl_PBJ6ynZlIpLi_0df-dxlskUGu9uWKVOBFeW2TjCreEfRv64QPEz8_6j82PUQkvubJ2WZBvCiG9ZoMApEyclgY5Miw=w800-h500-k-no=w500-h300-k-no" alt="Work by {{BUSINESS_NAME}}" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/grass-cs/AABkmLe0f8zPo6jPx_RdO8erKiZmvB9T1j375Xv8VBHw1NTI7Zhl_PBJ6ynZlIpLi_0df-dxlskUGu9uWKVOBFeW2TjCreEfRv64QPEz8_6j82PUQkvubJ2WZBvCiG9ZoMApEyclgY5Miw=w800-h500-k-no=w350-h350-k-no" alt="Work by {{BUSINESS_NAME}}" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/grass-cs/AABkmLe0f8zPo6jPx_RdO8erKiZmvB9T1j375Xv8VBHw1NTI7Zhl_PBJ6ynZlIpLi_0df-dxlskUGu9uWKVOBFeW2TjCreEfRv64QPEz8_6j82PUQkvubJ2WZBvCiG9ZoMApEyclgY5Miw=w800-h500-k-no=w400-h250-k-no" alt="Work by {{BUSINESS_NAME}}" loading="lazy">
+
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section>
+  <div class="wrap">
+    <div class="section-title">What our customers say</div>
+    <div class="section-sub">7 reviews on Google with a 5-star average</div>
+    <div class="reviews-grid">
+            <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Reviews from Google will appear here when the site goes live. Your real customer reviews, displayed beautifully.</p>
+        <div class="review-author">Your customers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE FORM -->
+<section id="estimate">
+  <div class="wrap">
+    <div class="quote-section">
+      <h2>Get a free estimate</h2>
+      <p>Tell us what you need and we'll get back to you fast.</p>
+      <div class="form-grid">
+        <div>
+          <label>Name</label>
+          <input type="text" placeholder="Your name">
+        </div>
+        <div>
+          <label>Phone</label>
+          <input type="tel" placeholder="(555) 555-5555">
+        </div>
+        <div class="full">
+          <label>What do you need?</label>
+          <select>
+            <option value="">Select a service</option>
+                        <option value="Painting">Painting</option>
+
+          </select>
+        </div>
+        <div class="full">
+          <label>Details</label>
+          <textarea placeholder="Tell us a bit about the job..."></textarea>
+        </div>
+        <div class="full">
+          <button class="form-submit">Request a free estimate</button>
+          <div class="form-consent">By submitting, you agree to receive a text reply. Msg & data rates may apply.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE AREA -->
+<section style="padding-top: 0;">
+  <div class="wrap">
+    <div class="section-title">Areas we serve</div>
+    <div class="section-sub">Proudly serving New York and surrounding areas</div>
+    <div class="area-tags">
+            <span class="area-tag">New York</span>
+      <span class="area-tag">Greater New York area</span>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Donnie Myers Studio, Inc. · New York, NY · <a href="tel:+19177710554" style="color: var(--accent); text-decoration: none;">(917) 771-0554</a></p>
+  <p style="margin-top: 8px; font-size: 11px;">Preview site built by maddiejolie.com</p>
+</footer>
+
+<!-- STICKY MOBILE CTA -->
+<div class="mobile-cta">
+  <a class="btn-call" href="tel:+19177710554">Call now</a>
+  <a class="btn-quote" href="#estimate">Free estimate</a>
+</div>
+
+<!-- UMAMI TRACKING (replace with your Umami script URL and website ID) -->
+<!-- <script defer src="https://your-umami.vercel.app/script.js" data-website-id="your-id"></script> -->
+
+<script>
+  // Style picker
+  function setTheme(theme) {
+    document.body.className = theme;
+    document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  // Show brand button if brand colors are set
+  if (getComputedStyle(document.documentElement).getPropertyValue('--brand-primary').trim()) {
+    document.getElementById('brand-btn').style.display = '';
+  }
+</script>
+
+</body>
+</html>

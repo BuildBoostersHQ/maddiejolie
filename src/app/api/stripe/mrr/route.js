@@ -6,8 +6,15 @@ const stripe = process.env.STRIPE_SECRET_KEY
   : null
 
 export async function GET() {
+  // Debug: check if key exists
   if (!stripe) {
-    return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
+    return NextResponse.json({
+      error: 'Stripe not configured',
+      debug: {
+        hasKey: !!process.env.STRIPE_SECRET_KEY,
+        keyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 8) || 'missing',
+      }
+    }, { status: 500 })
   }
 
   try {
@@ -17,7 +24,7 @@ export async function GET() {
     let startingAfter = undefined
 
     while (hasMore) {
-      const params = { status: 'active', limit: 100 }
+      const params = { status: 'active', limit: 100, expand: ['data.items.data.price'] }
       if (startingAfter) params.starting_after = startingAfter
 
       const batch = await stripe.subscriptions.list(params)
@@ -26,6 +33,18 @@ export async function GET() {
       if (batch.data.length > 0) {
         startingAfter = batch.data[batch.data.length - 1].id
       }
+    }
+
+    // Debug: log what we found
+    const debug = {
+      totalSubscriptions: subscriptions.length,
+      statuses: subscriptions.map(s => s.status),
+      items: subscriptions.map(s => s.items.data.map(i => ({
+        amount: i.price?.unit_amount,
+        interval: i.price?.recurring?.interval,
+        qty: i.quantity,
+        currency: i.price?.currency,
+      }))),
     }
 
     // Calculate current MRR
@@ -50,7 +69,6 @@ export async function GET() {
     const mrr = mrrCents / 100
 
     // Get last month's MRR for % change
-    // Count subs that started before 30 days ago
     const thirtyDaysAgo = Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60)
     const oldSubs = subscriptions.filter(s => s.start_date < thirtyDaysAgo)
     let oldMrrCents = 0
@@ -68,7 +86,6 @@ export async function GET() {
     const oldMrr = oldMrrCents / 100
     const mrrGrowth = oldMrr > 0 ? Math.round(((mrr - oldMrr) / oldMrr) * 100) : (mrr > 0 ? 100 : 0)
 
-    // Client growth
     const oldClients = oldSubs.length
     const clientGrowth = oldClients > 0 ? Math.round(((clients - oldClients) / oldClients) * 100) : (clients > 0 ? 100 : 0)
 
@@ -77,9 +94,14 @@ export async function GET() {
       clients,
       mrrGrowth,
       clientGrowth,
+      debug,
     })
 
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    return NextResponse.json({
+      error: err.message,
+      type: err.type || 'unknown',
+      code: err.code || 'unknown',
+    }, { status: 500 })
   }
 }

@@ -62,9 +62,13 @@ export default function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-dash-bg text-dash-text">
+    <div className="min-h-screen text-dash-text" style={{ background: '#08080a' }}>
+      {/* Ambient glow */}
+      <div className="fixed top-0 left-0 w-72 h-72 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)' }} />
+      <div className="fixed bottom-0 right-0 w-64 h-64 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(236,72,153,0.04) 0%, transparent 70%)' }} />
+
       {/* Top bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-dash-bg/80 backdrop-blur-xl border-b border-dash-border flex items-center justify-between px-4 lg:px-6">
+      <header className="fixed top-0 left-0 right-0 z-50 h-14 backdrop-blur-xl flex items-center justify-between px-4 lg:px-6" style={{ background: 'rgba(8,8,10,0.8)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setMobileNav(!mobileNav)}
@@ -74,14 +78,12 @@ export default function DashboardLayout({ children }) {
               <path d="M3 12h18M3 6h18M3 18h18" />
             </svg>
           </button>
-          <Link href="/dashboard" className="text-lg font-bold tracking-tight font-heading">
-            <span className="bg-gradient-to-r from-violet-300/80 to-rose-300/80 bg-clip-text text-transparent">
-              pipeline
-            </span>
+          <Link href="/dashboard" className="text-lg font-bold tracking-tight font-heading" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            pipeline
           </Link>
         </div>
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 text-xs text-dash-dim bg-dash-surface px-3 py-1.5 rounded-full border border-dash-border">
+          <div className="hidden sm:flex items-center gap-2 text-xs" style={{ color: 'rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.03)', padding: '3px 10px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.04)' }}>
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             Live
           </div>

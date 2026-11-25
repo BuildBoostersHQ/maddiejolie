@@ -30,7 +30,7 @@ export default function RunPipelinePage() {
   const [area, setArea] = useState('Miami, FL')
   const [customArea, setCustomArea] = useState('')
   const [trade, setTrade] = useState('handyman')
-  const [limit, setLimit] = useState(50)
+  const [limit, setLimit] = useState(500)
   const [step, setStep] = useState('idle') // idle, pulling, verifying, done
   const [log, setLog] = useState([])
   const [results, setResults] = useState(null)
@@ -187,17 +187,17 @@ export default function RunPipelinePage() {
             </label>
             <input
               type="range"
-              min="10"
-              max="100"
-              step="10"
+              min="100"
+              max="1000"
+              step="50"
               value={limit}
               onChange={(e) => setLimit(parseInt(e.target.value))}
               className="w-full accent-violet-500"
             />
             <div className="flex justify-between text-[10px] text-dash-dim mt-1">
-              <span>10</span>
-              <span>50</span>
               <span>100</span>
+              <span>500</span>
+              <span>1,000</span>
             </div>
           </div>
         </div>

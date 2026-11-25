@@ -50,40 +50,71 @@ function ConversationItem({ prospect, isSelected, onClick }) {
 
   if (prospect.messages.length === 0) return null
 
+  // Build gradient glow colors based on engagement
+  const glowColors = hasInbound && isEngaged
+    ? 'rgba(253,230,138,0.12), rgba(249,168,212,0.08), transparent'
+    : hasInbound
+    ? 'rgba(249,168,212,0.1), rgba(167,139,250,0.06), transparent'
+    : isEngaged
+    ? 'rgba(253,230,138,0.06), transparent, transparent'
+    : 'transparent, transparent, transparent'
+
   return (
     <div
       onClick={onClick}
-      className={`flex items-center gap-3 px-4 cursor-pointer transition-smooth ${
-        isSelected ? 'bg-white/[0.04]' : 'hover:bg-white/[0.02]'
-      }`}
+      className="cursor-pointer transition-smooth"
       style={{
         padding: '10px 16px',
         borderBottom: '1px solid rgba(255,255,255,0.03)',
         opacity: hasInbound ? 1 : 0.5,
+        position: 'relative',
+        overflow: 'hidden',
+        background: isSelected ? 'rgba(255,255,255,0.04)' : 'transparent',
       }}
+      onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
+      onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent' }}
     >
-      <div
-        className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
-        style={avatarStyle}
-      >
-        {prospect.owner.charAt(0)}{prospect.owner.split(' ')[1]?.charAt(0) || ''}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium truncate" style={{ color: hasInbound ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.3)' }}>
-            {prospect.owner}
-          </p>
-          <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.15)' }}>
-            {lastMessage && new Date(lastMessage.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-          </span>
+      {/* Glassmorphism glow behind avatar + fading into name */}
+      {(hasInbound || isEngaged) && (
+        <div style={{
+          position: 'absolute',
+          left: '8px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '180px',
+          height: '44px',
+          borderRadius: '24px',
+          background: `linear-gradient(90deg, ${glowColors})`,
+          backdropFilter: 'blur(12px)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }} />
+      )}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', position: 'relative', zIndex: 1 }}>
+        <div
+          className="flex-shrink-0"
+          style={{ ...avatarStyle, width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 600 }}
+        >
+          {prospect.owner.charAt(0)}{prospect.owner.split(' ')[1]?.charAt(0) || ''}
         </div>
-        <div className="flex items-center gap-2">
-          <p className="truncate flex-1" style={{ fontSize: '11px', color: hasInbound ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.12)' }}>
-            {lastMessage?.type === 'out' ? 'You: ' : ''}{lastMessage?.text}
-          </p>
-          {hasInbound && (
-            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'linear-gradient(135deg, #fde68a, #f9a8d4)', flexShrink: 0 }} />
-          )}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <p className="truncate" style={{ fontSize: '13px', fontWeight: 500, color: hasInbound ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.3)', margin: 0 }}>
+              {prospect.owner}
+            </p>
+            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.15)', flexShrink: 0, marginLeft: '8px' }}>
+              {lastMessage && new Date(lastMessage.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <p className="truncate" style={{ fontSize: '11px', color: hasInbound ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.12)', flex: 1, margin: 0 }}>
+              {lastMessage?.type === 'out' ? 'You: ' : ''}{lastMessage?.text}
+            </p>
+            {hasInbound && (
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'linear-gradient(135deg, #fde68a, #f9a8d4)', flexShrink: 0 }} />
+            )}
+          </div>
         </div>
       </div>
     </div>

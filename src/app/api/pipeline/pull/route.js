@@ -67,11 +67,12 @@ export async function POST(request) {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-    // Step 1: Pull from Outscraper
+    // Step 1: Pull from Outscraper (use async mode for large pulls)
+    const useAsync = limit > 100
     const params = new URLSearchParams({
       query: `${trade} in ${area}`,
-      limit: Math.min(limit, 100).toString(), // Cap at 100 per request for timeout safety
-      async: 'false',
+      limit: limit.toString(),
+      async: useAsync ? 'true' : 'false',
       language: 'en',
       region: 'us',
     })
@@ -86,7 +87,37 @@ export async function POST(request) {
     }
 
     const data = await res.json()
-    const raw = data.data?.[0] || data.data || []
+
+    // Handle async mode — Outscraper returns a task ID for large pulls
+    if (useAsync && data.id && !data.data) {
+      // Poll for results (up to 60 seconds)
+      let raw = []
+      for (let attempt = 0; attempt < 12; attempt++) {
+        await new Promise(r => setTimeout(r, 5000))
+        const pollRes = await fetch(`https://api.app.outscraper.com/requests/${data.id}`, {
+          headers: { 'X-API-KEY': OUTSCRAPER_KEY },
+        })
+        const pollData = await pollRes.json()
+        if (pollData.status === 'Success' && pollData.data) {
+          raw = pollData.data?.[0] || pollData.data || []
+          break
+        }
+        if (pollData.status === 'Error') {
+          return NextResponse.json({ error: `Outscraper task failed: ${pollData.message || 'unknown'}` }, { status: 502 })
+        }
+      }
+      if (raw.length === 0) {
+        return NextResponse.json({
+          error: 'Outscraper task still processing — try again in a few minutes',
+          taskId: data.id,
+        }, { status: 202 })
+      }
+      var rawResults = raw
+    } else {
+      var rawResults = data.data?.[0] || data.data || []
+    }
+
+    const raw = rawResults
 
     // Step 2: Filter
     const filtered = raw.filter(p => {

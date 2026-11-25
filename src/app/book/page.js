@@ -39,6 +39,8 @@ export default function BookPage() {
           <div className="bp-cal">
             <iframe
               src={embedUrl}
+              scrolling="no"
+              style={{ overflow: 'hidden' }}
               allow="payment"
             />
           </div>

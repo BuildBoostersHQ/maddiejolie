@@ -10,7 +10,6 @@ const nextConfig = {
     return [
       { source: '/calendar', destination: '/book', permanent: true },
       { source: '/demo', destination: '/book', permanent: true },
-      { source: '/landing.html', destination: '/', permanent: true },
     ]
   },
 }

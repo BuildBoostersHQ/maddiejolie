@@ -3,42 +3,139 @@ import { useState } from 'react'
 import { STAGES, getStage } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
 
+// 60+ seconds on page = "engaged" / looked for a while
+const ENGAGED_THRESHOLD = 60
+
+function getAvatarStyle(prospect) {
+  const hasInbound = prospect.messages?.some(m => m.type === 'in')
+  const isEngaged = prospect.timeOnPage >= ENGAGED_THRESHOLD
+
+  if (hasInbound && isEngaged) {
+    // Responded + engaged — warm gradient (yellow → pink → white)
+    return {
+      background: 'linear-gradient(135deg, #fde68a, #f9a8d4, #fce7f3, #ffffff)',
+      border: '1px solid rgba(253,230,138,0.3)',
+      color: '#92400e',
+    }
+  }
+  if (hasInbound) {
+    // Responded but didn't spend long — slightly cooler gradient
+    return {
+      background: 'linear-gradient(135deg, #fbcfe8, #f9a8d4, #e9d5ff, #f3e8ff)',
+      border: '1px solid rgba(249,168,212,0.3)',
+      color: '#831843',
+    }
+  }
+  if (isEngaged) {
+    // Looked for a while but hasn't responded — subtle warm tint
+    return {
+      background: 'linear-gradient(135deg, rgba(253,230,138,0.15), rgba(249,168,212,0.1))',
+      border: '1px solid rgba(253,230,138,0.1)',
+      color: 'rgba(253,230,138,0.7)',
+    }
+  }
+  // No response, didn't engage — very muted
+  return {
+    background: 'rgba(255,255,255,0.03)',
+    border: '1px solid rgba(255,255,255,0.04)',
+    color: 'rgba(255,255,255,0.15)',
+  }
+}
+
 function ConversationItem({ prospect, isSelected, onClick }) {
   const lastMessage = prospect.messages[prospect.messages.length - 1]
   const hasInbound = prospect.messages.some(m => m.type === 'in')
   const stage = getStage(prospect.stage)
+  const avatarStyle = getAvatarStyle(prospect)
 
   if (prospect.messages.length === 0) return null
 
   return (
     <div
       onClick={onClick}
-      className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-smooth border-b border-dash-border/30 ${
-        isSelected ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
+      className={`flex items-center gap-3 px-4 cursor-pointer transition-smooth ${
+        isSelected ? 'bg-white/[0.04]' : 'hover:bg-white/[0.02]'
       }`}
+      style={{
+        padding: '10px 16px',
+        borderBottom: '1px solid rgba(255,255,255,0.03)',
+        opacity: hasInbound ? 1 : 0.5,
+      }}
     >
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${
-        hasInbound
-          ? 'bg-gradient-to-br from-violet-500/20 to-pink-500/20 text-violet-300 ring-1 ring-violet-500/30'
-          : 'bg-dash-surface text-dash-dim ring-1 ring-dash-border'
-      }`}>
-        {prospect.owner.charAt(0)}
+      <div
+        className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+        style={avatarStyle}
+      >
+        {prospect.owner.charAt(0)}{prospect.owner.split(' ')[1]?.charAt(0) || ''}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium truncate">{prospect.owner}</p>
-          <span className="text-[10px] text-dash-dim flex-shrink-0 ml-2">
+          <p className="text-sm font-medium truncate" style={{ color: hasInbound ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.3)' }}>
+            {prospect.owner}
+          </p>
+          <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.15)' }}>
             {lastMessage && new Date(lastMessage.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <p className="text-xs text-dash-muted truncate flex-1">
+          <p className="truncate flex-1" style={{ fontSize: '11px', color: hasInbound ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.12)' }}>
             {lastMessage?.type === 'out' ? 'You: ' : ''}{lastMessage?.text}
           </p>
           {hasInbound && (
-            <span className="w-2 h-2 rounded-full bg-violet-400 flex-shrink-0" />
+            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'linear-gradient(135deg, #fde68a, #f9a8d4)', flexShrink: 0 }} />
           )}
         </div>
+      </div>
+    </div>
+  )
+}
+
+function ProspectInfoPanel({ prospect }) {
+  const stage = getStage(prospect.stage)
+  const mins = Math.floor(prospect.timeOnPage / 60)
+  const secs = prospect.timeOnPage % 60
+
+  return (
+    <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '11px' }}>
+        <div>
+          <p style={{ color: 'rgba(255,255,255,0.15)', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '3px' }}>Phone</p>
+          <a href={`tel:${prospect.phone.replace(/\D/g, '')}`} style={{ color: 'rgba(139,92,246,0.6)', textDecoration: 'none' }}>
+            {prospect.phone}
+          </a>
+        </div>
+        <div>
+          <p style={{ color: 'rgba(255,255,255,0.15)', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '3px' }}>Trade</p>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{prospect.trade}</p>
+        </div>
+        <div>
+          <p style={{ color: 'rgba(255,255,255,0.15)', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '3px' }}>Rating</p>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{prospect.rating} ({prospect.reviews} reviews)</p>
+        </div>
+        <div>
+          <p style={{ color: 'rgba(255,255,255,0.15)', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '3px' }}>Score</p>
+          <p style={{ color: prospect.score >= 80 ? 'rgba(74,222,128,0.6)' : prospect.score >= 60 ? 'rgba(251,191,36,0.6)' : 'rgba(255,255,255,0.4)', margin: 0, fontWeight: 600 }}>{prospect.score}</p>
+        </div>
+        <div>
+          <p style={{ color: 'rgba(255,255,255,0.15)', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '3px' }}>Page views</p>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>
+            {prospect.pageViews > 0 ? `${prospect.pageViews}x · ${mins}m ${secs}s` : 'No visits'}
+          </p>
+        </div>
+        <div>
+          <p style={{ color: 'rgba(255,255,255,0.15)', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '3px' }}>City</p>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{prospect.city}, {prospect.state}</p>
+        </div>
+      </div>
+      <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+        <a href={prospect.demoUrl} target="_blank" rel="noopener" style={{ fontSize: '10px', color: 'rgba(232,121,153,0.5)', textDecoration: 'none' }}>
+          View demo page
+        </a>
+        {prospect.googlePlaceUrl && (
+          <a href={prospect.googlePlaceUrl} target="_blank" rel="noopener" style={{ fontSize: '10px', color: 'rgba(139,92,246,0.5)', textDecoration: 'none' }}>
+            Google listing
+          </a>
+        )}
       </div>
     </div>
   )
@@ -47,55 +144,56 @@ function ConversationItem({ prospect, isSelected, onClick }) {
 function MessageThread({ prospect }) {
   const [newMessage, setNewMessage] = useState('')
   const stage = getStage(prospect.stage)
+  const avatarStyle = getAvatarStyle(prospect)
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
       {/* Thread header */}
-      <div className="px-4 py-3 border-b border-dash-border flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500/20 to-pink-500/20 border border-dash-border flex items-center justify-center text-xs font-bold text-violet-300">
-            {prospect.owner.charAt(0)}
+      <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div
+            style={{ ...avatarStyle, width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 600 }}
+          >
+            {prospect.owner.charAt(0)}{prospect.owner.split(' ')[1]?.charAt(0) || ''}
           </div>
           <div>
-            <p className="text-sm font-bold">{prospect.owner}</p>
-            <p className="text-xs text-dash-dim">{prospect.name} · {prospect.trade}</p>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.8)', margin: 0 }}>{prospect.owner}</p>
+            <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', margin: '1px 0 0' }}>{prospect.name} · {prospect.trade}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className={`${stage.class} text-[10px] font-semibold px-2 py-0.5 rounded-full text-white`}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className={stage.class} style={{ fontSize: '9px', fontWeight: 500, padding: '3px 10px', borderRadius: '20px' }}>
             {stage.label}
           </span>
           <a
             href={`tel:${prospect.phone.replace(/\D/g, '')}`}
-            className="w-8 h-8 rounded-full bg-green-500/10 hover:bg-green-500/20 text-green-400 flex items-center justify-center transition-smooth"
-            title={`Call ${prospect.phone}`}
+            style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(74,222,128,0.5)', textDecoration: 'none' }}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
               <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
             </svg>
           </a>
-          <a
-            href={prospect.demoUrl}
-            target="_blank"
-            rel="noopener"
-            className="text-xs text-pink-400 hover:text-pink-300 transition-smooth"
-          >
-            Demo →
-          </a>
         </div>
       </div>
+
+      {/* Prospect info */}
+      <ProspectInfoPanel prospect={prospect} />
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         {prospect.messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.type === 'out' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 ${
-              msg.type === 'out'
-                ? 'bg-gradient-to-br from-violet-500/20 to-violet-500/10 text-violet-100 rounded-br-md border border-violet-500/10'
-                : 'bg-white/[0.08] text-dash-text rounded-bl-md border border-dash-border/50'
-            }`}>
-              <p className="text-sm leading-relaxed">{msg.text}</p>
-              <p className="text-[10px] text-dash-dim mt-1.5">
+            <div style={{
+              maxWidth: '80%',
+              borderRadius: '16px',
+              padding: '8px 14px',
+              ...(msg.type === 'out'
+                ? { background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.06)', color: 'rgba(255,255,255,0.65)', borderBottomRightRadius: '4px' }
+                : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.75)', borderBottomLeftRadius: '4px' }
+              ),
+            }}>
+              <p style={{ fontSize: '13px', lineHeight: 1.5, margin: 0 }}>{msg.text}</p>
+              <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.15)', marginTop: '4px' }}>
                 {new Date(msg.time).toLocaleString('en-US', {
                   month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
                 })}
@@ -106,27 +204,64 @@ function MessageThread({ prospect }) {
       </div>
 
       {/* Compose */}
-      <div className="px-4 py-3 border-t border-dash-border">
-        <div className="flex gap-2">
+      <div style={{ padding: '12px 16px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 bg-dash-bg border border-dash-border rounded-xl px-4 py-2.5 text-sm text-dash-text placeholder-dash-dim focus:outline-none focus:border-violet-500/50 transition-smooth"
+            style={{ flex: 1, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px 14px', fontSize: '13px', color: 'rgba(255,255,255,0.8)', outline: 'none' }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && newMessage.trim()) {
-                // Will send via Kixie API when connected
                 setNewMessage('')
               }
             }}
           />
-          <button className="bg-gradient-to-r from-violet-500 to-pink-500 hover:from-violet-400 hover:to-pink-400 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-smooth">
+          <button style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.3), rgba(236,72,153,0.2))', border: '1px solid rgba(139,92,246,0.15)', color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontWeight: 500, padding: '10px 20px', borderRadius: '12px', cursor: 'pointer' }}>
             Send
           </button>
         </div>
-        <p className="text-[10px] text-dash-dim mt-1.5 px-1">Sends via Kixie API · Not yet connected</p>
+        <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.1)', marginTop: '6px', paddingLeft: '4px' }}>Sends via Kixie API · Not yet connected</p>
       </div>
+    </div>
+  )
+}
+
+function ClickedList({ prospects }) {
+  const clicked = prospects
+    .filter(p => p.pageViews > 0)
+    .sort((a, b) => b.timeOnPage - a.timeOnPage)
+
+  if (clicked.length === 0) return null
+
+  return (
+    <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', padding: '12px 0' }}>
+      <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '1px', padding: '0 16px', marginBottom: '8px' }}>
+        Clicked demo · by time on page
+      </p>
+      {clicked.map(p => {
+        const mins = Math.floor(p.timeOnPage / 60)
+        const secs = p.timeOnPage % 60
+        const isWarm = p.timeOnPage >= ENGAGED_THRESHOLD
+
+        return (
+          <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 16px' }}>
+            <div style={{
+              width: '6px', height: '6px', borderRadius: '50%', flexShrink: 0,
+              background: isWarm
+                ? 'linear-gradient(135deg, #fde68a, #f9a8d4)'
+                : 'rgba(255,255,255,0.1)',
+            }} />
+            <span style={{ fontSize: '11px', color: isWarm ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)', flex: 1 }}>
+              {p.name}
+            </span>
+            <span style={{ fontSize: '10px', color: isWarm ? 'rgba(253,230,138,0.5)' : 'rgba(255,255,255,0.12)', fontFamily: 'Figtree' }}>
+              {mins}m {secs}s
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -134,14 +269,15 @@ function MessageThread({ prospect }) {
 export default function MessagesPage() {
   const { prospects, loading } = useProspects()
   const [selected, setSelected] = useState(null)
+  const [hideNonResponders, setHideNonResponders] = useState(false)
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
-      <p className="text-sm text-dash-dim">Loading...</p>
+      <p className="text-sm" style={{ color: 'rgba(255,255,255,0.15)' }}>Loading...</p>
     </div>
   )
 
-  const withMessages = prospects
+  let withMessages = prospects
     .filter(p => p.messages.length > 0)
     .sort((a, b) => {
       const aHasIn = a.messages.some(m => m.type === 'in') ? 1 : 0
@@ -152,19 +288,43 @@ export default function MessagesPage() {
       return bLast - aLast
     })
 
+  if (hideNonResponders) {
+    withMessages = withMessages.filter(p => p.messages.some(m => m.type === 'in'))
+  }
+
+  const responderCount = prospects.filter(p => p.messages.some(m => m.type === 'in')).length
+
   return (
     <div className="pb-20 lg:pb-0">
       <div className="mb-4 lg:hidden">
-        <h1 className="text-xl font-bold">Messages</h1>
-        <p className="text-sm text-dash-muted mt-1">{withMessages.length} conversations</p>
+        <h1 className="text-xl font-bold font-heading">Messages</h1>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.25)' }}>{withMessages.length} conversations</p>
       </div>
 
-      <div className="flex gap-0 lg:gap-0 bg-dash-surface border border-dash-border rounded-xl overflow-hidden" style={{ height: 'calc(100vh - 8rem)' }}>
+      <div className="flex gap-0 rounded-xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.015)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '14px', height: 'calc(100vh - 8rem)' }}>
         {/* Conversation list */}
-        <div className={`${selected ? 'hidden lg:block' : 'w-full'} lg:w-80 border-r border-dash-border overflow-y-auto flex-shrink-0`}>
-          <div className="hidden lg:block px-4 py-3 border-b border-dash-border">
-            <h2 className="text-sm font-semibold">Messages</h2>
-            <p className="text-xs text-dash-dim">{withMessages.length} conversations</p>
+        <div className={`${selected ? 'hidden lg:block' : 'w-full'} lg:w-80 overflow-y-auto flex-shrink-0`} style={{ borderRight: '1px solid rgba(255,255,255,0.03)' }}>
+          <div className="hidden lg:block" style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h2 style={{ fontSize: '13px', fontWeight: 600, fontFamily: 'Figtree', color: 'rgba(255,255,255,0.6)', margin: 0 }}>Messages</h2>
+                <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.15)', margin: '2px 0 0' }}>{responderCount} responded · {withMessages.length} total</p>
+              </div>
+              <button
+                onClick={() => setHideNonResponders(!hideNonResponders)}
+                style={{
+                  fontSize: '9px',
+                  padding: '3px 10px',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: hideNonResponders ? 'rgba(139,92,246,0.1)' : 'rgba(255,255,255,0.03)',
+                  color: hideNonResponders ? 'rgba(139,92,246,0.6)' : 'rgba(255,255,255,0.2)',
+                }}
+              >
+                {hideNonResponders ? 'Show all' : 'Responded only'}
+              </button>
+            </div>
           </div>
           {withMessages.map(p => (
             <ConversationItem
@@ -174,6 +334,9 @@ export default function MessagesPage() {
               onClick={() => setSelected(p)}
             />
           ))}
+
+          {/* Clicked demo list */}
+          <ClickedList prospects={prospects} />
         </div>
 
         {/* Thread view */}
@@ -182,15 +345,16 @@ export default function MessagesPage() {
             <div className="w-full">
               <button
                 onClick={() => setSelected(null)}
-                className="lg:hidden px-4 py-2 text-xs text-violet-400 hover:text-violet-300"
+                className="lg:hidden"
+                style={{ padding: '8px 16px', fontSize: '11px', color: 'rgba(139,92,246,0.5)', background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                ← Back to conversations
+                Back
               </button>
               <MessageThread prospect={selected} />
             </div>
           ) : (
             <div className="flex-1 flex items-center justify-center">
-              <p className="text-sm text-dash-dim">Select a conversation</p>
+              <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.1)' }}>Select a conversation</p>
             </div>
           )}
         </div>

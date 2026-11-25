@@ -1,13 +1,29 @@
 'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { STAGES } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
+
+function useStripeMRR() {
+  const [data, setData] = useState({ mrr: 0, clients: 0, mrrGrowth: 0, clientGrowth: 0 })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/stripe/mrr')
+      .then(r => r.json())
+      .then(d => { if (!d.error) setData(d) })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  return { ...data, loading }
+}
 
 function StatCard({ label, value, sub, gradient }) {
   return (
     <div className="bg-dash-surface border border-dash-border rounded-xl p-4 lg:p-5">
       <p className="text-xs text-dash-dim uppercase tracking-wider mb-1">{label}</p>
-      <p className={`text-2xl lg:text-3xl font-bold ${gradient ? 'bg-gradient-to-r bg-clip-text text-transparent' : ''}`}
+      <p className={`text-2xl lg:text-3xl font-bold font-heading ${gradient ? 'bg-gradient-to-r bg-clip-text text-transparent' : ''}`}
          style={gradient ? { backgroundImage: gradient } : {}}>
         {value}
       </p>
@@ -49,6 +65,7 @@ function HotLeadRow({ prospect }) {
 
 export default function DashboardOverview() {
   const { prospects, loading, isLive } = useProspects()
+  const stripe = useStripeMRR()
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
@@ -82,31 +99,59 @@ export default function DashboardOverview() {
         </p>
       </div>
 
-      {/* Stats row */}
+      {/* Revenue row */}
+      <div className="grid grid-cols-2 gap-3 lg:gap-4">
+        <div className="bg-dash-surface border border-dash-border rounded-xl p-4 lg:p-5">
+          <p className="text-xs text-dash-dim uppercase tracking-wider mb-1">Live MRR</p>
+          <p className="text-2xl lg:text-3xl font-bold font-heading bg-gradient-to-r bg-clip-text text-transparent"
+             style={{ backgroundImage: 'linear-gradient(to right, #6aab7a, #5b9e80)' }}>
+            {stripe.loading ? '...' : `$${stripe.mrr.toLocaleString()}`}
+          </p>
+          {!stripe.loading && (
+            <p className={`text-xs mt-1 ${stripe.mrrGrowth >= 0 ? 'text-green-400/70' : 'text-red-400/70'}`}>
+              {stripe.mrrGrowth >= 0 ? '+' : ''}{stripe.mrrGrowth}% from last month
+            </p>
+          )}
+        </div>
+        <div className="bg-dash-surface border border-dash-border rounded-xl p-4 lg:p-5">
+          <p className="text-xs text-dash-dim uppercase tracking-wider mb-1">Active clients</p>
+          <p className="text-2xl lg:text-3xl font-bold font-heading bg-gradient-to-r bg-clip-text text-transparent"
+             style={{ backgroundImage: 'linear-gradient(to right, #b896c7, #c494a8)' }}>
+            {stripe.loading ? '...' : stripe.clients}
+          </p>
+          {!stripe.loading && (
+            <p className={`text-xs mt-1 ${stripe.clientGrowth >= 0 ? 'text-green-400/70' : 'text-red-400/70'}`}>
+              {stripe.clientGrowth >= 0 ? '+' : ''}{stripe.clientGrowth}% from last month
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Pipeline stats row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
         <StatCard
           label="Total Prospects"
           value={total}
           sub="All time"
-          gradient="linear-gradient(to right, #6366f1, #8b5cf6)"
+          gradient="linear-gradient(to right, #7c83b8, #8e8fc8)"
         />
         <StatCard
           label="Clicked Demo"
           value={clicked}
           sub={`${total > 0 ? Math.round((clicked / total) * 100) : 0}% click rate`}
-          gradient="linear-gradient(to right, #e879f9, #f472b6)"
+          gradient="linear-gradient(to right, #b896c7, #c494a8)"
         />
         <StatCard
           label="Responded"
           value={responded}
           sub={`${total > 0 ? Math.round((responded / total) * 100) : 0}% response rate`}
-          gradient="linear-gradient(to right, #f97316, #f59e0b)"
+          gradient="linear-gradient(to right, #c89f80, #c4a76a)"
         />
         <StatCard
           label="Closed"
           value={closed}
-          sub={`$${closed * 197}/mo revenue`}
-          gradient="linear-gradient(to right, #22c55e, #10b981)"
+          sub="From pipeline"
+          gradient="linear-gradient(to right, #6aab7a, #5b9e80)"
         />
       </div>
 

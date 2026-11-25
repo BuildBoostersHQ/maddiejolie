@@ -13,6 +13,7 @@ export const STAGES = [
   { id: 'clicked', label: 'Clicked', class: 'status-clicked' },
   { id: 'engaged', label: 'Engaged', class: 'status-vm' },
   { id: 'responded', label: 'Responded', class: 'status-responded' },
+  { id: 'booked', label: 'Booked', class: 'status-booked' },
   { id: 'closed', label: 'Closed', class: 'status-closed' },
   { id: 'lost', label: 'Lost', class: 'status-lost' },
 ]
@@ -39,6 +40,24 @@ export const TRADES = [
   'Plumber',
   'Electrician',
 ]
+
+export const BRANDS = [
+  { id: 'mj', label: 'Maddie Jolie', domain: 'maddiejolie.com' },
+  { id: 'bb', label: 'Build Boosters', domain: 'buildboosters.com' },
+]
+
+export const BRAND_LINKS = {
+  mj: {
+    calendar: 'https://link.to/mj-calendar', // placeholder
+    pricing: 'https://maddiejolie.com/pricing', // placeholder
+    vsl: 'https://maddiejolie.com/vsl', // placeholder
+  },
+  bb: {
+    calendar: 'https://link.to/bb-calendar', // placeholder
+    pricing: 'https://buildboosters.com/pricing', // placeholder
+    vsl: 'https://buildboosters.com/vsl', // placeholder
+  },
+}
 
 // Mock data for UI development — will be replaced with Supabase
 export const MOCK_PROSPECTS = [

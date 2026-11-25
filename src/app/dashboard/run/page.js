@@ -30,6 +30,7 @@ export default function RunPipelinePage() {
   const [area, setArea] = useState('Miami, FL')
   const [customArea, setCustomArea] = useState('')
   const [trade, setTrade] = useState('handyman')
+  const [brand, setBrand] = useState('split')
   const [limit, setLimit] = useState(500)
   const [step, setStep] = useState('idle') // idle, pulling, verifying, done
   const [log, setLog] = useState([])
@@ -54,6 +55,7 @@ export default function RunPipelinePage() {
           area: customArea || area,
           trade,
           limit,
+          brand,
         }),
       })
 
@@ -70,6 +72,9 @@ export default function RunPipelinePage() {
       addLog(`After filtering: ${data.filtered} (dropped ${data.raw - data.filtered})`)
       addLog(`Duplicates skipped: ${data.duplicates}`)
       addLog(`Saved ${data.saved} new prospects`)
+      if (data.mjCount != null && data.bbCount != null) {
+        addLog(`Brand split: ${data.mjCount} MJ / ${data.bbCount} BB`)
+      }
 
       if (data.saved > 0) {
         addLog('Ready to verify phone numbers')
@@ -178,6 +183,19 @@ export default function RunPipelinePage() {
               className="w-full bg-dash-bg border border-dash-border rounded-lg px-3 py-2.5 text-sm text-dash-text focus:outline-none focus:border-violet-500/30 transition-all appearance-none"
             >
               {TARGET_TRADES.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-xs text-dash-dim uppercase tracking-wider block mb-2">Brand</label>
+            <select
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+              className="w-full bg-dash-bg border border-dash-border rounded-lg px-3 py-2.5 text-sm text-dash-text focus:outline-none focus:border-violet-500/30 transition-all appearance-none"
+            >
+              <option value="split">50/50 Split (A/B Test)</option>
+              <option value="mj">Maddie Jolie only</option>
+              <option value="bb">Build Boosters only</option>
             </select>
           </div>
 

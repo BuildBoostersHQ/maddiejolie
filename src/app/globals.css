@@ -13,6 +13,7 @@
 .status-clicked { background: rgba(232,121,153,0.1); border: 1px solid rgba(232,121,153,0.08); color: rgba(232,121,153,0.7); }
 .status-vm { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.08); color: rgba(167,139,250,0.7); }
 .status-responded { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.06); color: rgba(251,191,36,0.6); }
+.status-booked { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.06); color: rgba(56,189,248,0.6); }
 .status-closed { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.06); color: rgba(74,222,128,0.6); }
 .status-lost { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.03); color: rgba(255,255,255,0.25); }
 

@@ -66,6 +66,55 @@ function HotLeadRow({ prospect }) {
   )
 }
 
+function BrandColumn({ label, emoji, prospects, gradient }) {
+  const total = prospects.length
+  const clicked = prospects.filter(p => p.pageViews > 0).length
+  const engaged = prospects.filter(p => p.timeOnPage >= 60).length
+  const responded = prospects.filter(p => ['responded', 'booked', 'closed'].includes(p.stage)).length
+  const booked = prospects.filter(p => p.stage === 'booked').length
+  const closed = prospects.filter(p => p.stage === 'closed').length
+
+  const pct = (n) => total > 0 ? Math.round((n / total) * 100) : 0
+
+  return (
+    <div className="p-4 lg:p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <span>{emoji}</span>
+        <p className="text-sm font-semibold bg-gradient-to-r bg-clip-text text-transparent"
+           style={{ backgroundImage: gradient }}>
+          {label}
+        </p>
+      </div>
+      <div className="space-y-3">
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-dash-muted">Prospects</span>
+          <span className="text-sm font-bold">{total}</span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-dash-muted">Clicked</span>
+          <span className="text-sm font-bold">{clicked} <span className="text-xs text-dash-dim font-normal">({pct(clicked)}%)</span></span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-dash-muted">Engaged (60s+)</span>
+          <span className="text-sm font-bold">{engaged} <span className="text-xs text-dash-dim font-normal">({pct(engaged)}%)</span></span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-dash-muted">Responded</span>
+          <span className="text-sm font-bold">{responded} <span className="text-xs text-dash-dim font-normal">({pct(responded)}%)</span></span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-dash-muted">Booked</span>
+          <span className="text-sm font-bold">{booked} <span className="text-xs text-dash-dim font-normal">({pct(booked)}%)</span></span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-dash-muted">Closed</span>
+          <span className="text-sm font-bold text-green-400">{closed} <span className="text-xs text-dash-dim font-normal">({pct(closed)}%)</span></span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function DashboardOverview() {
   const { prospects, loading, isLive } = useProspects()
   const stripe = useStripeMRR()
@@ -78,7 +127,7 @@ export default function DashboardOverview() {
 
   const total = prospects.length
   const clicked = prospects.filter(p => p.pageViews > 0).length
-  const responded = prospects.filter(p => ['responded', 'called', 'closed'].includes(p.stage)).length
+  const responded = prospects.filter(p => ['responded', 'booked', 'closed'].includes(p.stage)).length
   const closed = prospects.filter(p => p.stage === 'closed').length
 
   const hotLeads = [...prospects]
@@ -168,6 +217,32 @@ export default function DashboardOverview() {
           sub="From pipeline"
           gradient="linear-gradient(to right, #6aab7a, #5b9e80)"
         />
+      </div>
+
+      {/* A/B Brand Comparison */}
+      <div className="bg-dash-surface border border-dash-border rounded-xl">
+        <div className="px-4 lg:px-5 py-3 border-b border-dash-border">
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-semibold">A/B Brand Test</h2>
+            <span className="text-xs text-dash-dim">Maddie Jolie vs Build Boosters</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 divide-x divide-dash-border">
+          {/* MJ side */}
+          <BrandColumn
+            label="Maddie Jolie"
+            emoji="🟣"
+            prospects={prospects.filter(p => (p.brand || 'mj') === 'mj')}
+            gradient="linear-gradient(to right, #a78bfa, #c084fc)"
+          />
+          {/* BB side */}
+          <BrandColumn
+            label="Build Boosters"
+            emoji="🟠"
+            prospects={prospects.filter(p => p.brand === 'bb')}
+            gradient="linear-gradient(to right, #fb923c, #f59e0b)"
+          />
+        </div>
       </div>
 
       {/* Two-column layout */}

@@ -82,7 +82,7 @@ function ProspectDetail({ prospect, onClose }) {
       </div>
 
       {/* Quick info */}
-      <div className="px-4 py-3 border-b border-dash-border/50 grid grid-cols-2 gap-3">
+      <div className="px-4 py-3 border-b border-dash-border/50 grid grid-cols-3 gap-3">
         <div>
           <p className="text-[10px] text-dash-dim uppercase tracking-wider">Phone</p>
           <a href={`tel:${prospect.phone.replace(/\D/g, '')}`} className="text-sm text-violet-400 hover:text-violet-300 font-medium">
@@ -92,6 +92,10 @@ function ProspectDetail({ prospect, onClose }) {
         <div>
           <p className="text-[10px] text-dash-dim uppercase tracking-wider">Trade</p>
           <p className="text-sm">{prospect.trade}</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-dash-dim uppercase tracking-wider">Brand</p>
+          <p className="text-sm">{prospect.brand === 'bb' ? '🟠 Build Boosters' : '🟣 Maddie Jolie'}</p>
         </div>
         <div>
           <p className="text-[10px] text-dash-dim uppercase tracking-wider">Rating</p>
@@ -106,6 +110,12 @@ function ProspectDetail({ prospect, onClose }) {
             }
           </p>
         </div>
+        {prospect.from_number && (
+          <div>
+            <p className="text-[10px] text-dash-dim uppercase tracking-wider">From #</p>
+            <p className="text-sm text-dash-muted">{prospect.from_number}</p>
+          </div>
+        )}
       </div>
 
       {/* Demo link */}
@@ -118,6 +128,49 @@ function ProspectDetail({ prospect, onClose }) {
         >
           View demo page →
         </a>
+      </div>
+
+      {/* Quick send */}
+      <div className="px-4 py-2.5 border-b border-dash-border/50 flex gap-2">
+        <button
+          onClick={() => {
+            const brand = prospect.brand || 'mj'
+            const links = {
+              mj: 'https://link.to/mj-calendar',
+              bb: 'https://link.to/bb-calendar',
+            }
+            setNewMessage(`Hey ${prospect.owner?.split(' ')[0] || 'there'}! Here's a link to book a quick call: ${links[brand]}`)
+          }}
+          className="flex-1 py-2 rounded-lg text-[11px] font-medium transition-smooth bg-sky-500/10 hover:bg-sky-500/15 text-sky-400 border border-sky-500/10"
+        >
+          📅 Calendar
+        </button>
+        <button
+          onClick={() => {
+            const brand = prospect.brand || 'mj'
+            const links = {
+              mj: 'https://maddiejolie.com/pricing',
+              bb: 'https://buildboosters.com/pricing',
+            }
+            setNewMessage(`Hey ${prospect.owner?.split(' ')[0] || 'there'}! Here's our pricing info: ${links[brand]}`)
+          }}
+          className="flex-1 py-2 rounded-lg text-[11px] font-medium transition-smooth bg-green-500/10 hover:bg-green-500/15 text-green-400 border border-green-500/10"
+        >
+          💰 Pricing
+        </button>
+        <button
+          onClick={() => {
+            const brand = prospect.brand || 'mj'
+            const links = {
+              mj: 'https://maddiejolie.com/vsl',
+              bb: 'https://buildboosters.com/vsl',
+            }
+            setNewMessage(`Hey ${prospect.owner?.split(' ')[0] || 'there'}! Check out this quick video about how we help contractors like you: ${links[brand]}`)
+          }}
+          className="flex-1 py-2 rounded-lg text-[11px] font-medium transition-smooth bg-pink-500/10 hover:bg-pink-500/15 text-pink-400 border border-pink-500/10"
+        >
+          🎬 VSL
+        </button>
       </div>
 
       {/* Messages */}
@@ -204,7 +257,7 @@ export default function ProspectsPage() {
       {/* Header */}
       <div className="mb-4">
         <h1 className="text-xl lg:text-2xl font-bold">Prospects</h1>
-        <p className="text-sm text-dash-muted mt-1">{filtered.length} prospects · {MOCK_PROSPECTS.filter(p => p.pageViews > 0).length} have visited their demo</p>
+        <p className="text-sm text-dash-muted mt-1">{filtered.length} prospects · {prospects.filter(p => p.pageViews > 0).length} have visited their demo</p>
       </div>
 
       {/* Filters */}

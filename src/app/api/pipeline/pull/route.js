@@ -56,7 +56,7 @@ function getTopReviewerName(p) {
 
 export async function POST(request) {
   try {
-    const { area, trade, limit = 50 } = await request.json()
+    const { area, trade, limit = 50, brand = 'split' } = await request.json()
 
     if (!area || !trade) {
       return NextResponse.json({ error: 'Area and trade are required' }, { status: 400 })
@@ -145,8 +145,26 @@ export async function POST(request) {
     const fresh = filtered.filter(p => !existing.has(p.place_id))
 
     // Step 4: Save to Supabase (without phone verification — that's a separate step)
-    const prospects = fresh.map(p => {
+    // Brand assignment: 'mj', 'bb', or 'split' (random 50/50)
+    function assignBrand(index) {
+      if (brand === 'mj' || brand === 'bb') return brand
+      return Math.random() < 0.5 ? 'mj' : 'bb'
+    }
+
+    let mjCount = 0
+    let bbCount = 0
+
+    const prospects = fresh.map((p, i) => {
       const slug = generateSlug(p.name, p.city || '')
+      const assignedBrand = assignBrand(i)
+      if (assignedBrand === 'mj') mjCount++
+      else bbCount++
+
+      // For MJ brand, demo lives on maddiejolie.com; for BB, on buildboosters.com
+      const demoUrl = assignedBrand === 'bb'
+        ? `https://buildboosters.com/demo/${slug}`
+        : `/demo/${slug}`
+
       return {
         place_id: p.place_id,
         name: p.name,
@@ -161,8 +179,9 @@ export async function POST(request) {
         top_reviewer_name: getTopReviewerName(p),
         stage: 'prospect',
         score: scoreProspect(p),
-        demo_url: `/demo/${slug}`,
+        demo_url: demoUrl,
         demo_slug: slug,
+        brand: assignedBrand,
         google_photos: JSON.stringify((p.photos_sample || []).slice(0, 5)),
         google_place_url: p.place_url || null,
         outscraper_data: JSON.stringify({
@@ -197,6 +216,8 @@ export async function POST(request) {
       filtered: filtered.length,
       duplicates: existing.size,
       saved: prospects.length,
+      mjCount,
+      bbCount,
     })
 
   } catch (err) {

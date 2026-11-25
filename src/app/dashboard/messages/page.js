@@ -1,12 +1,12 @@
 'use client'
 import { useState } from 'react'
-import { STAGES } from '@/lib/constants'
+import { STAGES, getStage } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
 
 function ConversationItem({ prospect, isSelected, onClick }) {
   const lastMessage = prospect.messages[prospect.messages.length - 1]
   const hasInbound = prospect.messages.some(m => m.type === 'in')
-  const stage = STAGES.find(s => s.id === prospect.stage)
+  const stage = getStage(prospect.stage)
 
   if (prospect.messages.length === 0) return null
 
@@ -46,7 +46,7 @@ function ConversationItem({ prospect, isSelected, onClick }) {
 
 function MessageThread({ prospect }) {
   const [newMessage, setNewMessage] = useState('')
-  const stage = STAGES.find(s => s.id === prospect.stage)
+  const stage = getStage(prospect.stage)
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">

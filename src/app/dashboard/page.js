@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { STAGES } from '@/lib/constants'
+import { STAGES, getStage } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
 
 function useStripeMRR() {
@@ -35,7 +35,7 @@ function StatCard({ label, value, sub, gradient }) {
 function HotLeadRow({ prospect }) {
   const mins = Math.floor(prospect.timeOnPage / 60)
   const secs = prospect.timeOnPage % 60
-  const stage = STAGES.find(s => s.id === prospect.stage)
+  const stage = getStage(prospect.stage)
 
   return (
     <div className="flex items-center justify-between py-3 border-b border-dash-border/50 last:border-0">

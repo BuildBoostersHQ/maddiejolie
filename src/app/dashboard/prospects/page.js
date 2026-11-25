@@ -1,10 +1,10 @@
 'use client'
 import { useState } from 'react'
-import { STAGES, TRADES } from '@/lib/constants'
+import { STAGES, TRADES, getStage } from '@/lib/constants'
 import { useProspects } from '@/lib/useProspects'
 
 function ProspectRow({ prospect, onSelect, isSelected }) {
-  const stage = STAGES.find(s => s.id === prospect.stage)
+  const stage = getStage(prospect.stage)
   const mins = Math.floor(prospect.timeOnPage / 60)
   const hasVisited = prospect.pageViews > 0
 
@@ -61,7 +61,7 @@ function ProspectRow({ prospect, onSelect, isSelected }) {
 
 function ProspectDetail({ prospect, onClose }) {
   const [newMessage, setNewMessage] = useState('')
-  const stage = STAGES.find(s => s.id === prospect.stage)
+  const stage = getStage(prospect.stage)
   const mins = Math.floor(prospect.timeOnPage / 60)
   const secs = prospect.timeOnPage % 60
 

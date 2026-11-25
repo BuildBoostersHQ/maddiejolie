@@ -1,3 +1,9 @@
+export const FALLBACK_STAGE = { id: 'unknown', label: 'Unknown', class: 'status-lost' }
+
+export function getStage(stageId) {
+  return STAGES.find(s => s.id === stageId) || FALLBACK_STAGE
+}
+
 export const STAGES = [
   { id: 'prospect', label: 'Prospect', class: 'status-new' },
   { id: 'sms12', label: 'SMS 1+2', class: 'status-sms1' },
@@ -179,7 +185,7 @@ export const MOCK_PROSPECTS = [
     state: 'NY',
     rating: 4.8,
     reviews: 56,
-    stage: 'called',
+    stage: 'engaged',
     demoUrl: '/demo/think-clean-new-york',
     pageViews: 4,
     timeOnPage: 189,

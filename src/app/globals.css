@@ -18,10 +18,10 @@
 .status-lost { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.03); color: rgba(255,255,255,0.25); }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* Smooth transitions */
 .transition-smooth {
@@ -117,6 +117,12 @@
 .bp-foot p {
   font-size: 12px; color: rgba(79,195,247,0.25);
 }
+/* Booking page scrollbar — matches the blue theme */
+.bp::-webkit-scrollbar { width: 8px; }
+.bp::-webkit-scrollbar-track { background: rgba(5,12,22,0.5); }
+.bp::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.2); border-radius: 4px; }
+.bp::-webkit-scrollbar-thumb:hover { background: rgba(79,195,247,0.35); }
+.bp { scrollbar-width: thin; scrollbar-color: rgba(79,195,247,0.2) transparent; }
 
 @media (max-width: 600px) {
   .bp-hero { padding: 36px 20px 28px; }

@@ -34,6 +34,7 @@ export function useProspects() {
           name: p.name,
           owner: p.owner_name || '',
           phone: p.phone || '',
+          phoneType: p.phone_type || 'unverified',
           trade: p.trade || '',
           city: p.city || '',
           state: p.state || '',
@@ -41,11 +42,17 @@ export function useProspects() {
           reviews: p.review_count || 0,
           stage: p.stage || 'new',
           demoUrl: p.demo_url || '',
+          demoSlug: p.demo_slug || '',
           pageViews: 0,
           timeOnPage: 0,
           lastVisit: null,
           score: p.score || 0,
           notes: p.notes || '',
+          brand: p.brand || 'mj',
+          fromNumber: p.from_number || '',
+          batchId: p.batch_id || null,
+          topReviewerName: p.top_reviewer_name || '',
+          googlePlaceUrl: p.google_place_url || '',
           messages: [],
         }))
 
@@ -63,6 +70,9 @@ export function useProspects() {
                 type: m.direction === 'outbound' ? 'out' : 'in',
                 text: m.body,
                 time: m.sent_at,
+                step: m.sequence_step || null,
+                brand: m.brand || null,
+                fromNumber: m.from_number || null,
               }))
           }
         }

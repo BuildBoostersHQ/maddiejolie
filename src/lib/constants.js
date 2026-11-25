@@ -65,6 +65,50 @@ export const BRAND_LINKS = {
   },
 }
 
+// ── Sequence steps (tag each outbound SMS so you can filter by step) ──
+export const SEQUENCE_STEPS = [
+  { id: 'sms1',      label: 'SMS 1 — Intro + Link',      color: 'rgba(139,92,246,0.5)' },
+  { id: 'sms2',      label: 'SMS 2 — Typo Fix',          color: 'rgba(139,92,246,0.4)' },
+  { id: 'sms3',      label: 'SMS 3 — Review Name',        color: 'rgba(236,72,153,0.5)' },
+  { id: 'voicemail', label: 'Voicemail Drop',              color: 'rgba(251,191,36,0.5)' },
+  { id: 'sms4',      label: 'SMS 4 — Testimonial',        color: 'rgba(74,222,128,0.5)' },
+  { id: 'sms5',      label: 'SMS 5 — Soft Close',         color: 'rgba(248,113,113,0.5)' },
+  { id: 'manual',    label: 'Manual Message',              color: 'rgba(255,255,255,0.3)' },
+  { id: 'reply',     label: 'Reply',                       color: 'rgba(96,165,250,0.5)' },
+  { id: 'inbound',   label: 'Inbound',                     color: 'rgba(52,211,153,0.5)' },
+]
+
+export function getSequenceStep(stepId) {
+  return SEQUENCE_STEPS.find(s => s.id === stepId) || { id: stepId, label: stepId || 'Unknown', color: 'rgba(255,255,255,0.2)' }
+}
+
+// ── Kixie numbers — fill in your actual numbers ──
+// Map area codes to the Kixie number that texts prospects in that market.
+// The export route uses this to auto-assign from_number per prospect.
+export const KIXIE_NUMBERS = {
+  '305': '',  // Miami-Dade  — paste your Kixie 305 number here
+  '786': '',  // Miami-Dade alt
+  '954': '',  // Broward
+  '561': '',  // Palm Beach
+  'default': '',  // fallback for any area code not listed
+}
+
+// Given a prospect's phone, pick which Kixie number to text from
+export function assignKixieNumber(phone) {
+  const digits = (phone || '').replace(/\D/g, '')
+  const areaCode = digits.startsWith('1') ? digits.slice(1, 4) : digits.slice(0, 3)
+  return KIXIE_NUMBERS[areaCode] || KIXIE_NUMBERS['default'] || ''
+}
+
+// ── Batch statuses ──
+export const BATCH_STATUSES = [
+  { id: 'pulled',   label: 'Pulled' },
+  { id: 'verified', label: 'Verified' },
+  { id: 'exported', label: 'Exported' },
+  { id: 'sending',  label: 'Sending' },
+  { id: 'complete', label: 'Complete' },
+]
+
 // Mock data for UI development — will be replaced with Supabase
 export const MOCK_PROSPECTS = [
   {

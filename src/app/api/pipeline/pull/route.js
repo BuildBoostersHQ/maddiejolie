@@ -202,13 +202,23 @@ export async function POST(request) {
     }
 
     // Save batch record
-    await supabase.from('batches').insert({
+    const { data: batchRow } = await supabase.from('batches').insert({
       area,
       trade,
+      brand: brand === 'split' ? 'split' : brand,
       raw_count: raw.length,
       filtered_count: filtered.length,
       verified_count: fresh.length,
-    })
+    }).select('id').single()
+
+    // Link prospects to their batch
+    if (batchRow && prospects.length > 0) {
+      const placeIdsToUpdate = prospects.map(p => p.place_id)
+      await supabase
+        .from('prospects')
+        .update({ batch_id: batchRow.id })
+        .in('place_id', placeIdsToUpdate)
+    }
 
     return NextResponse.json({
       success: true,
@@ -218,6 +228,7 @@ export async function POST(request) {
       saved: prospects.length,
       mjCount,
       bbCount,
+      batchId: batchRow?.id || null,
     })
 
   } catch (err) {

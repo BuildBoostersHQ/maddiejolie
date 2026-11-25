@@ -10,7 +10,7 @@
 // and the businessid query param is shown with a colon in the article (we use "=").
 // Requires Professional billing tier with API enabled by Kixie.
 //
-// Env: KIXIE_API_KEY, KIXIE_BUSINESS_ID, KIXIE_USER_EMAIL, KIXIE_FROM_EMAILS (optional),
+// Env: KIXIE_API_KEY, KIXIE_BUSINESS_ID, KIXIE_TEAM_SMS_ID (recommended), KIXIE_USER_EMAIL, KIXIE_FROM_EMAILS (optional),
 //      KIXIE_API_URL (optional override), KIXIE_WEBHOOK_SECRET (webhook)
 
 export const OPT_OUT_REGEX = /^\s*(stop|stopall|unsubscribe|cancel|end|quit|remove|wrong number)\b[\s.!]*$|\bwrong number\b/i
@@ -42,9 +42,24 @@ export async function sendKixieSms({ to, body, fromNumber }) {
   if (!apikey || !businessid) {
     return { ok: false, status: 500, error: 'KIXIE_API_KEY / KIXIE_BUSINESS_ID not configured' }
   }
-  const email = emailForNumber(fromNumber)
-  if (!email) {
-    return { ok: false, status: 500, error: `No Kixie user email for ${fromNumber || 'from number'} (set KIXIE_FROM_EMAILS or KIXIE_USER_EMAIL)` }
+  // Preferred: Team SMS API (supports an explicit fromNumber when the Team SMS rule has several numbers).
+  // Docs: https://developer.kixie.com/team-sms-api/  (eventname 'bizsms', id = Team SMS ID,
+  // Manage > Numbers > Team SMS). Replies land in the shared Team SMS inbox.
+  const teamId = process.env.KIXIE_TEAM_SMS_ID
+  let payload
+  if (teamId) {
+    payload = {
+      businessid, eventname: 'bizsms', id: Number(teamId) || teamId,
+      target: last10(to), message: body, apikey,
+    }
+    if (fromNumber) payload.fromNumber = '1' + last10(fromNumber)
+  } else {
+    // Fallback: single-user Send SMS API (sends from that Kixie user's one designated number).
+    const email = emailForNumber(fromNumber)
+    if (!email) {
+      return { ok: false, status: 500, error: `Set KIXIE_TEAM_SMS_ID (recommended) or KIXIE_USER_EMAIL / KIXIE_FROM_EMAILS` }
+    }
+    payload = { businessid, apikey, eventname: 'sms', target: last10(to), email, message: body }
   }
   const base = process.env.KIXIE_API_URL || 'https://apig.kixie.com/app/event'
   const url = `${base}?apikey=${encodeURIComponent(apikey)}&businessid=${encodeURIComponent(businessid)}`
@@ -52,10 +67,7 @@ export async function sendKixieSms({ to, body, fromNumber }) {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        businessid, apikey, eventname: 'sms',
-        target: last10(to), email, message: body,
-      }),
+      body: JSON.stringify(payload),
     })
     const text = await res.text()
     let data = {}

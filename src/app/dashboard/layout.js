@@ -10,6 +10,7 @@ const navItems = [
   { href: '/dashboard/pipeline', label: 'Pipeline', icon: '▦' },
   { href: '/dashboard/messages', label: 'Messages', icon: '◈' },
   { href: '/dashboard/calls', label: 'Calls', icon: '◇' },
+  { href: '/dashboard/launch', label: 'Launch', icon: '▲' },
   { href: '/dashboard/run', label: 'Run', icon: '▶' },
 ]
 

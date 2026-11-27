@@ -13,6 +13,8 @@ const navItems = [
   { href: '/dashboard/launch', label: 'Launch', icon: '▲' },
   { href: '/dashboard/tasks', label: 'Tasks', icon: '◫' },
   { href: '/dashboard/changes', label: 'Changes', icon: '◆' },
+  { href: '/dashboard/deck', label: 'Deck', icon: '▭' },
+  { href: '/dashboard/press', label: 'Press', icon: '✎' },
   { href: '/dashboard/run', label: 'Run', icon: '▶' },
 ]
 

@@ -11,6 +11,7 @@ const navItems = [
   { href: '/dashboard/messages', label: 'Messages', icon: '◈' },
   { href: '/dashboard/calls', label: 'Calls', icon: '◇' },
   { href: '/dashboard/launch', label: 'Launch', icon: '▲' },
+  { href: '/dashboard/tasks', label: 'Tasks', icon: '◫' },
   { href: '/dashboard/changes', label: 'Changes', icon: '◆' },
   { href: '/dashboard/run', label: 'Run', icon: '▶' },
 ]

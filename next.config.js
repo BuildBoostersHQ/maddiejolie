@@ -5,6 +5,8 @@ const nextConfig = {
     return [
       { source: '/calendar', destination: '/book', permanent: true },
       { source: '/demo', destination: '/book', permanent: true },
+      { source: '/landing.html', destination: '/', permanent: true },
+      { source: '/landing', destination: '/', permanent: true },
     ]
   },
   // Serve the Umami tracking script from this domain so ad blockers are less

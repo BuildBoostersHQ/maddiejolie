@@ -3,7 +3,7 @@ import './globals.css'
 export const metadata = {
   title: 'Maddie Jolie',
   description: 'Websites and lead systems for contractors',
-  robots: 'noindex',
+  robots: 'index, follow',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32' },

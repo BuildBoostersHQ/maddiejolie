@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Maddie Jolie | websites and lead systems for contractors</title>
 <meta name="description" content="Websites and lead systems for roofers, HVAC companies, plumbers, painters, and handymen. $79/mo, no contracts.">
-<meta name="robots" content="noindex">
+<!-- <meta name="robots" content="noindex"> uncomment to hide from Google -->
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -107,21 +107,27 @@
     max-width: 640px;
     margin: 0 auto;
   }
+  .hero-intro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
   .hero .photo {
-    width: 110px;
-    height: 110px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     object-fit: cover;
     object-position: center 20%;
-    margin-bottom: 24px;
-    border: 4px solid rgba(255,255,255,0.4);
+    border: 3px solid rgba(255,255,255,0.4);
     box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    flex-shrink: 0;
   }
   .hero .wave {
     font-size: 15px;
     font-weight: 600;
     color: var(--text-mid);
-    margin-bottom: 14px;
   }
   .hero h1 {
     font-size: clamp(28px, 5vw, 44px);
@@ -196,7 +202,7 @@
   .stage {
     background: #0f1f33;
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 28px;
     display: grid;
     grid-template-columns: auto 1fr;
@@ -204,17 +210,11 @@
     align-items: start;
   }
   .stage-num {
-    width: 38px;
-    height: 38px;
-    background: rgba(245,166,35,0.12);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-weight: 800;
-    font-size: 15px;
+    font-size: 18px;
     color: var(--amber);
     flex-shrink: 0;
+    padding-top: 2px;
   }
   .stage h3 {
     font-size: 17px;
@@ -245,7 +245,7 @@
   .plan {
     background: #0f1f33;
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 28px;
     position: relative;
     display: flex;
@@ -391,7 +391,7 @@
   .thread {
     background: #0f1f33;
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 20px;
     max-width: 420px;
     margin: 0 auto 48px;
@@ -450,7 +450,7 @@
   .fly-step {
     background: #0f1f33;
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 8px;
     padding: 22px;
   }
   .fly-step .fly-num {
@@ -483,34 +483,7 @@
   }
 </style>
 
-<!-- GA4 — replace G-XXXXXXXXXX with your Measurement ID -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-</script>
-
-<!-- Meta Pixel — replace YOUR_PIXEL_ID with your Pixel ID -->
-<script>
-  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-  document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', 'YOUR_PIXEL_ID');
-  fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
-
-<!-- Microsoft Clarity — replace YOUR_CLARITY_ID with your Project ID -->
-<script>
-  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-  })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
-</script>
+<!-- Analytics: add tracking IDs when ready -->
 
 </head>
 <body>
@@ -531,8 +504,10 @@
 <!-- HERO -->
 <div class="wrap">
   <div class="hero">
-    <img class="photo" src="photo.jpg" alt="Maddie" width="110" height="110">
-    <div class="wave">hey, i'm maddie</div>
+    <div class="hero-intro">
+      <img class="photo" src="photo.jpg" alt="Maddie" width="72" height="72">
+      <div class="wave">hey, i'm maddie</div>
+    </div>
     <h1>When Melissa needs a contractor, <em>she's going to Google it.</em></h1>
     <p>I make sure she finds you, trusts you, and books you before she calls someone else. Websites and lead systems for roofers, handymen, HVAC companies, painters, and more.</p>
     <div class="badges">
@@ -552,28 +527,28 @@
 
     <div class="stages">
       <div class="stage">
-        <div class="stage-num" style="font-size: 18px;">1</div>
+        <div class="stage-num">1.</div>
         <div>
           <h3>Show up when they search</h3>
           <p>SEO, pages for every service and service location, hosted on premium American servers. When someone in your area searches for what you do, you're there.</p>
         </div>
       </div>
       <div class="stage">
-        <div class="stage-num" style="font-size: 18px;">2</div>
+        <div class="stage-num">2.</div>
         <div>
           <h3>Put your best reviews front and center</h3>
           <p>Your top Google reviews right on every page. Not buried in a listing someone has to scroll through. When people see real 5-star reviews and photos of real jobs, they stop shopping around.</p>
         </div>
       </div>
       <div class="stage">
-        <div class="stage-num" style="font-size: 18px;">3</div>
+        <div class="stage-num">3.</div>
         <div>
           <h3>Works on every phone</h3>
           <p>Most people searching for a contractor are on their phone. Tap-to-call buttons, fast load times, quote forms that actually work on a small screen. No pinching and zooming.</p>
         </div>
       </div>
       <div class="stage">
-        <div class="stage-num" style="font-size: 18px;">4</div>
+        <div class="stage-num">4.</div>
         <div>
           <h3>Turn visitors into text conversations</h3>
           <p>Quote forms and a chat widget that start a real text thread with the customer. They get an instant confirmation, you get their number, and you can follow up the way people actually communicate.</p>
@@ -586,7 +561,7 @@
 <!-- QUICK CTA -->
 <section style="padding: 40px 0;">
   <div class="wrap" style="text-align: center; max-width: 540px;">
-    <div style="background: #0f1f33; border: 1px solid rgba(245,166,35,0.2); border-radius: 16px; padding: 32px 28px;">
+    <div style="background: #0f1f33; border: 1px solid rgba(245,166,35,0.2); border-radius: 8px; padding: 32px 28px;">
       <div style="font-size: clamp(28px, 5vw, 40px); font-weight: 800; color: #fff; letter-spacing: -0.03em; margin-bottom: 6px;">$79/mo</div>
       <div style="font-size: 15px; color: var(--text-mid); margin-bottom: 20px;">No contracts. Cancel anytime. See full pricing below.</div>
       <a href="#pricing" style="display: inline-block; background: var(--amber); color: #091624; font-weight: 700; font-size: 15px; padding: 14px 36px; border-radius: 100px; text-decoration: none; box-shadow: 0 2px 16px rgba(245,166,35,0.3); transition: transform 0.15s;">get started</a>
@@ -604,7 +579,7 @@
   <div class="wrap" style="text-align: center; max-width: 700px;">
     <div class="section-label">But here's the thing</div>
     <div class="section-title">A website gets <span style="color: var(--accent);">people to your door.</span> What happens when they knock?</div>
-    <div class="section-sub">Most contractors lose half the leads that come in. Not because the work is bad, but because nobody picked up the phone, the quote request sat in an inbox for two days, or the customer just found someone faster.</div>
+    <div class="section-sub">Contractors lose jobs every week not because the work is bad, but because nobody picked up the phone, the quote request sat in an inbox for two days, or the customer just found someone faster.</div>
 
     <!-- BEFORE / AFTER PHONES -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px auto 0; max-width: 560px; text-align: left;">
@@ -612,42 +587,42 @@
       <!-- BEFORE -->
       <div>
         <div style="text-align: center; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #f87171; margin-bottom: 12px;">Without a system</div>
-        <div style="background: rgba(79,195,247,0.06); border: 1.5px solid #e53e3e; border-radius: 20px; padding: 16px; min-height: 280px;">
-          <div style="text-align: center; font-size: 11px; color: var(--text-dim); margin-bottom: 12px;">Tuesday 2:14 PM</div>
+        <div style="background: rgba(79,195,247,0.06); border: 1.5px solid #e53e3e; border-radius: 8px; padding: 16px; min-height: 280px;">
+          <div style="text-align: center; font-size: 11px; color: var(--text-dim); margin-bottom: 12px;">Tuesday</div>
           <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(248,113,113,0.2); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
             <div style="font-size: 12px; color: #f87171; font-weight: 600;">Missed call</div>
-            <div style="font-size: 11px; color: var(--text-dim);">Mike R. - 2:14 PM</div>
+            <div style="font-size: 11px; color: var(--text-dim);">Mike R. - 10:14 AM</div>
           </div>
           <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(248,113,113,0.2); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
             <div style="font-size: 12px; color: #f87171; font-weight: 600;">Missed call</div>
-            <div style="font-size: 11px; color: var(--text-dim);">Sarah T. - 3:02 PM</div>
+            <div style="font-size: 11px; color: var(--text-dim);">Sarah T. - 1:02 PM</div>
           </div>
           <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(248,113,113,0.2); border-radius: 10px; padding: 10px 12px; margin-bottom: 16px;">
             <div style="font-size: 12px; color: #f87171; font-weight: 600;">Missed call</div>
-            <div style="font-size: 11px; color: var(--text-dim);">James K. - 4:45 PM</div>
+            <div style="font-size: 11px; color: var(--text-dim);">James K. - 3:45 PM</div>
           </div>
-          <div style="text-align: center; font-size: 12px; color: #f87171; font-weight: 600;">3 leads gone. $0 earned.</div>
+          <div style="text-align: center; font-size: 12px; color: #f87171; font-weight: 600;">3 calls gone. $0 earned.</div>
         </div>
       </div>
 
       <!-- AFTER -->
       <div>
         <div style="text-align: center; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #4ade80; margin-bottom: 12px;">With the system</div>
-        <div style="background: #0a1220; border: 1px solid rgba(74,222,128,0.2); border-radius: 20px; padding: 16px; min-height: 280px;">
-          <div style="text-align: center; font-size: 11px; color: var(--text-dim); margin-bottom: 12px;">Tuesday 2:14 PM</div>
+        <div style="background: #0a1220; border: 1px solid rgba(74,222,128,0.2); border-radius: 8px; padding: 16px; min-height: 280px;">
+          <div style="text-align: center; font-size: 11px; color: var(--text-dim); margin-bottom: 12px;">Tuesday</div>
           <div style="background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.15); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
             <div style="font-size: 12px; color: #4ade80; font-weight: 600;">Job booked</div>
             <div style="font-size: 11px; color: var(--text-dim);">Sarah T. - Kitchen remodel</div>
           </div>
           <div style="background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.15); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
-            <div style="font-size: 12px; color: #4ade80; font-weight: 600;">Free estimate sent</div>
-            <div style="font-size: 11px; color: var(--text-dim);">Auto-reply to Mike R. - 2:14 PM</div>
+            <div style="font-size: 12px; color: #4ade80; font-weight: 600;">Auto-reply sent</div>
+            <div style="font-size: 11px; color: var(--text-dim);">Mike R. - 10:14 AM</div>
           </div>
           <div style="background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.15); border-radius: 10px; padding: 10px 12px; margin-bottom: 16px;">
-            <div style="font-size: 12px; color: #4ade80; font-weight: 600;">Emergency call answered</div>
-            <div style="font-size: 11px; color: var(--text-dim);">James K. routed to on-call - 4:45 PM</div>
+            <div style="font-size: 12px; color: #4ade80; font-weight: 600;">Quote requested</div>
+            <div style="font-size: 11px; color: var(--text-dim);">James K. - 3:45 PM</div>
           </div>
-          <div style="text-align: center; font-size: 12px; color: #4ade80; font-weight: 600;">3 leads handled. $0 lost.</div>
+          <div style="text-align: center; font-size: 12px; color: #4ade80; font-weight: 600;">3 calls handled. $0 lost.</div>
         </div>
       </div>
 
@@ -666,10 +641,10 @@
 
     <div class="thread">
       <div class="thread-header">Messages with Mike R.</div>
-      <div class="msg missed">Missed call from Mike R. · 2:14 PM</div>
+      <div class="msg missed">Missed call from Mike R. · 10:14 AM</div>
       <div class="msg out">
-        <div class="bubble">Hey Mike, this is Ruiz Roofing. Sorry we missed you! How can we help?</div>
-        <div class="meta">Sent automatically · 2:14 PM</div>
+        <div class="bubble">Hey Mike, this is Ruiz Roofing. I could not get to the phone right now. If you text me the address and what is going on, I will get back to you as soon as I can.</div>
+        <div class="meta">Sent automatically · 10:15 AM</div>
       </div>
       <div class="msg in">
         <div class="bubble">Got a leak in the kitchen ceiling. Can someone take a look?</div>
@@ -777,10 +752,10 @@
       <div class="about-text">
         <p>My grandfather ran a carpet store in Brooklyn for 30 years. I spent weekends there watching him answer the phone, write up quotes, and earn customers one handshake at a time. That's where I learned what it actually looks like to run a small business.</p>
         <p>I started building websites for my church, then for family, then for friends who needed help getting found online. Eventually I ended up at GoHighLevel, the software behind a lot of the marketing systems agencies sell to small businesses for thousands a month. I saw what worked, what didn't, and how much contractors were overpaying for it.</p>
-        <p>So now I do it myself, directly, for people like you. No agency markup, no six-month contract, no runaround. Just a website that makes you look as good as your work already is, and a system that makes sure the phone keeps ringing.</p>
+        <p>That's why I started Build Boosters. I do it myself, directly, for people like you. No agency markup, no six-month contract, no runaround. Just a website that makes you look as good as your work already is, and a system that makes sure the phone keeps ringing.</p>
         <div style="margin-top: 16px;">
           <div class="about-name">Maddie Jolie</div>
-          <div class="about-loc">Miami, FL</div>
+          <div class="about-loc">Founder, Build Boosters · Miami, FL</div>
         </div>
       </div>
     </div>
@@ -790,7 +765,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="wrap">
-    <p>maddiejolie · miami, fl</p>
+    <p>Maddie Jolie · <a href="https://buildboosters.com">Build Boosters</a> · Miami, FL</p>
   </div>
 </footer>
 

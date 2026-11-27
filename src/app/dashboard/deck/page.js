@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { authFetch } from '@/lib/authFetch'
 
 // Launch deck generator. Pick a client who is getting ready to launch and the deck fills itself in
-// from their Build Boosters record. Goals come from the sales notes and can be edited here.
+// from their Build Boosters record. Goals are the sales notes on that record, edited here.
 // Present it full screen on the launch call, or print it to a PDF.
 
 const NAVY = '#0b2440', AMBER = '#f2a20c', TEXT = '#121a24', MUTED = '#5b6878', SOFT = '#f3f5f8', LINE = '#e4e9ef'
@@ -139,6 +139,7 @@ export default function DeckPage() {
   const [code, setCode] = useState('')
   const [goals, setGoals] = useState('')
   const [showAll, setShowAll] = useState(false)
+  const [saved, setSaved] = useState('')
   const deckRef = useRef(null)
 
   const load = useCallback(async () => {
@@ -152,14 +153,14 @@ export default function DeckPage() {
   const list = (clients || []).filter((c) => showAll || !c.a2p_approved_at)
   const c = (clients || []).find((x) => x.code === code)
 
-  // Goals start from the sales notes and are remembered on this computer once edited.
-  useEffect(() => {
-    if (!c) return
-    let saved = null
-    try { saved = localStorage.getItem(`deck-goals:${c.code}`) } catch {}
-    setGoals(saved !== null ? saved : (c.goals || ''))
-  }, [code]) // eslint-disable-line react-hooks/exhaustive-deps
-  function editGoals(v) { setGoals(v); try { localStorage.setItem(`deck-goals:${code}`, v) } catch {} }
+  // Goals live on the client's record as sales notes, so they are there on any computer.
+  useEffect(() => { if (c) { setGoals(c.goals || ''); setSaved('') } }, [code]) // eslint-disable-line react-hooks/exhaustive-deps
+  async function saveGoals() {
+    if (!c || goals === (c.goals || '')) return
+    setSaved('Saving...')
+    const res = await authFetch('/api/launch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'sales_notes', id: c.id, text: goals }) })
+    if (res.ok) { c.goals = goals; setSaved('Saved to their record') } else setSaved('Could not save. Check the connection and click out of the box again.')
+  }
 
   if (error) return <div className="bg-dash-surface border border-dash-border rounded-xl p-5 text-sm text-dash-muted">{error}</div>
   if (!clients) return <p className="text-sm text-dash-dim">Loading...</p>
@@ -205,9 +206,10 @@ export default function DeckPage() {
           {c ? (
             <div>
               <label className="text-xs text-dash-muted block mb-1.5" htmlFor="deck-goals">Their goals, one per line</label>
-              <textarea id="deck-goals" value={goals} onChange={(e) => editGoals(e.target.value)} rows={5}
+              <textarea id="deck-goals" value={goals} onChange={(e) => setGoals(e.target.value)} onBlur={saveGoals} rows={5}
                 placeholder={'Stop losing jobs to missed calls\nGet to 50 Google reviews'}
                 className="w-full bg-transparent border border-dash-border rounded-lg px-3 py-2 text-sm" />
+              <p className="text-xs text-dash-dim mt-1">{saved || 'Type them on the sales call. They save when you click out of the box.'}</p>
             </div>
           ) : null}
         </div>

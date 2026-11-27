@@ -105,7 +105,7 @@ I listened to the episode on scaling past $1M by dialing in systems, and I work 
 
 I'm 25 and I run Build Boosters in Miami. My job managing top affiliates at HighLevel ended in August, and I spent the three months since building a system where a contractor pays, fills in one form, and gets a website, a business number and automatic text follow-up built for them, with AI doing most of the work between payment and launch.
 
-I build on top of Jobber for my clients, so I see what happens after a job is marked done: the review ask, the photo, the follow-up. I could walk your listeners through the small set of systems worth setting up before they hire anyone to do marketing.
+My system connects to Jobber, so I've spent a lot of time on what should happen after a job is marked done: the review ask, the photo, the follow-up. I could walk your listeners through the small set of systems worth setting up before they hire anyone to do marketing.
 
 I'll send in the guest application too. Would this be a fit?
 

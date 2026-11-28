@@ -1,10 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.7"/>
-      <stop offset="100%" stop-color="#fb7185" stop-opacity="0.7"/>
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="8" fill="#08080a"/>
-  <text x="16" y="21" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="600" font-size="13" fill="url(#g)">mj</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1186 1186"><path fill="#4fc3f7" transform="translate(8.5 854.5) scale(1 -1)" d="M55 0V546H195V480Q210 510 238 528Q284 558 348 558Q416 558 468 524Q498 503 514 475Q536 507 566 526Q616 558 683 558Q742 558 787.5 532.0Q833 506 859.0 459.5Q885 413 885 351V0H735V319Q735 351 723.5 374.0Q712 397 691.0 410.0Q670 423 640 423Q611 423 589.5 410.0Q568 397 556.5 374.0Q545 351 545 319V0H395V319Q395 351 383.5 374.0Q372 397 351.0 410.0Q330 423 300 423Q271 423 249.5 410.0Q228 397 216.5 374.0Q205 351 205 319V0Z M898 -222Q883 -222 868.5 -220.5Q854 -219 844 -217V-89Q861 -92 878 -92Q921 -92 942.5 -74.0Q964 -56 964 -20V546H1114V-20Q1114 -84 1088.5 -129.5Q1063 -175 1014.5 -198.5Q966 -222 898 -222ZM964 595V745H1114V595Z"/></svg>
